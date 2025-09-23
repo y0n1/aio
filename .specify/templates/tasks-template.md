@@ -44,51 +44,52 @@
 
 ## Phase 3.1: Setup
 - [ ] T001 Create project structure per implementation plan
-- [ ] T002 Initialize [language] project with [framework] dependencies
-- [ ] T003 [P] Configure linting and formatting tools
+- [ ] T002 Initialize TypeScript React library project with React Testing Library dependencies
+- [ ] T003 [P] Configure ESLint, Prettier, and TypeScript strict mode
+- [ ] T004 [P] Setup Jest and React Testing Library for hook testing
 
 ## Phase 3.2: Tests First (TDD) ⚠️ MUST COMPLETE BEFORE 3.3
 **CRITICAL: These tests MUST be written and MUST FAIL before ANY implementation**
-- [ ] T004 [P] Contract test POST /api/users in tests/contract/test_users_post.py
-- [ ] T005 [P] Contract test GET /api/users/{id} in tests/contract/test_users_get.py
-- [ ] T006 [P] Integration test user registration in tests/integration/test_registration.py
-- [ ] T007 [P] Integration test auth flow in tests/integration/test_auth.py
+- [ ] T005 [P] Hook unit test in tests/unit/useCustomHook.test.ts
+- [ ] T006 [P] Hook integration test in tests/integration/useCustomHook.integration.test.ts
+- [ ] T007 [P] TypeScript interface tests in tests/types/hookTypes.test.ts
+- [ ] T008 [P] Performance benchmark tests in tests/performance/hookPerformance.test.ts
 
 ## Phase 3.3: Core Implementation (ONLY after tests are failing)
-- [ ] T008 [P] User model in src/models/user.py
-- [ ] T009 [P] UserService CRUD in src/services/user_service.py
-- [ ] T010 [P] CLI --create-user in src/cli/user_commands.py
-- [ ] T011 POST /api/users endpoint
-- [ ] T012 GET /api/users/{id} endpoint
-- [ ] T013 Input validation
-- [ ] T014 Error handling and logging
+- [ ] T009 [P] Hook implementation in src/hooks/useCustomHook.ts
+- [ ] T010 [P] TypeScript interfaces in src/types/hookTypes.ts
+- [ ] T011 [P] Hook utilities and helpers in src/utils/hookUtils.ts
+- [ ] T012 Hook error handling and edge cases
+- [ ] T013 Hook cleanup and memory management
+- [ ] T014 Hook memoization and performance optimization
 
 ## Phase 3.4: Integration
-- [ ] T015 Connect UserService to DB
-- [ ] T016 Auth middleware
-- [ ] T017 Request/response logging
-- [ ] T018 CORS and security headers
+- [ ] T015 Hook integration with React DevTools
+- [ ] T016 Hook SSR compatibility testing
+- [ ] T017 Hook bundle size optimization
+- [ ] T018 Hook tree-shaking validation
 
 ## Phase 3.5: Polish
-- [ ] T019 [P] Unit tests for validation in tests/unit/test_validation.py
-- [ ] T020 Performance tests (<200ms)
-- [ ] T021 [P] Update docs/api.md
-- [ ] T022 Remove duplication
-- [ ] T023 Run manual-testing.md
+- [ ] T019 [P] Hook documentation and examples in docs/hooks/
+- [ ] T020 Hook performance benchmarks and optimization
+- [ ] T021 [P] Update README with usage examples
+- [ ] T022 Hook TypeScript declaration file generation
+- [ ] T023 Hook integration with popular React frameworks
 
 ## Dependencies
-- Tests (T004-T007) before implementation (T008-T014)
-- T008 blocks T009, T015
-- T016 blocks T018
+- Tests (T005-T008) before implementation (T009-T014)
+- T009 (hook implementation) blocks T010 (interfaces), T015 (DevTools integration)
+- T010 (interfaces) blocks T011 (utilities)
+- T012 (error handling) blocks T013 (cleanup)
 - Implementation before polish (T019-T023)
 
 ## Parallel Example
 ```
-# Launch T004-T007 together:
-Task: "Contract test POST /api/users in tests/contract/test_users_post.py"
-Task: "Contract test GET /api/users/{id} in tests/contract/test_users_get.py"
-Task: "Integration test registration in tests/integration/test_registration.py"
-Task: "Integration test auth in tests/integration/test_auth.py"
+# Launch T005-T008 together:
+Task: "Hook unit test in tests/unit/useCustomHook.test.ts"
+Task: "Hook integration test in tests/integration/useCustomHook.integration.test.ts"
+Task: "TypeScript interface tests in tests/types/hookTypes.test.ts"
+Task: "Performance benchmark tests in tests/performance/hookPerformance.test.ts"
 ```
 
 ## Notes

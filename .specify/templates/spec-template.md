@@ -40,15 +40,15 @@
 ### For AI Generation
 When creating this spec from a user prompt:
 1. **Mark all ambiguities**: Use [NEEDS CLARIFICATION: specific question] for any assumption you'd need to make
-2. **Don't guess**: If the prompt doesn't specify something (e.g., "login system" without auth method), mark it
+2. **Don't guess**: If the prompt doesn't specify something (e.g., "state management hook" without persistence method), mark it
 3. **Think like a tester**: Every vague requirement should fail the "testable and unambiguous" checklist item
-4. **Common underspecified areas**:
-   - User types and permissions
-   - Data retention/deletion policies  
-   - Performance targets and scale
-   - Error handling behaviors
-   - Integration requirements
-   - Security/compliance needs
+4. **Common underspecified areas for React hooks**:
+   - Hook dependencies and cleanup requirements
+   - Performance constraints and memoization needs
+   - TypeScript interface definitions
+   - Error handling and fallback behaviors
+   - Browser compatibility requirements
+   - Bundle size and tree-shaking considerations
 
 ---
 
@@ -81,6 +81,13 @@ When creating this spec from a user prompt:
 ### Key Entities *(include if feature involves data)*
 - **[Entity 1]**: [What it represents, key attributes without implementation]
 - **[Entity 2]**: [What it represents, relationships to other entities]
+
+### Hook Interface Requirements *(mandatory for hook features)*
+- **Hook Name**: [e.g., useCustomState, useAsyncData]
+- **Parameters**: [Input parameters with types, e.g., (initialValue: T, options?: Options)]
+- **Return Value**: [Return object/array with types, e.g., { value: T, setValue: (value: T) => void, loading: boolean }]
+- **Side Effects**: [Any side effects, cleanup, or external dependencies]
+- **Performance Considerations**: [Memoization needs, re-render optimization requirements]
 
 ---
 
