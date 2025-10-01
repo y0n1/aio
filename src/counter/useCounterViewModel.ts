@@ -4,7 +4,7 @@ export function useCounterViewModel() {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    console.log(count);
+    console.log(`<useCounterViewModel count="${count}">`);
   }, [count]);
 
   const handleIncrease = useCallback(() => {

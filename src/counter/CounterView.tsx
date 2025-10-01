@@ -13,7 +13,7 @@ export const CounterView = forwardRef<HTMLDivElement, CounterViewProps>((
     <div ref={ref}>
         <button type="button" onClick={props.onDecrease}>-</button>
         <span>{props.count}</span>
-        <button onClick={props.onIncrease}>+</button>
+        <button type="button" onClick={props.onIncrease}>+</button>
     </div>
 ));
 CounterView.displayName = "CounterView";

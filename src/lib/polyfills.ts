@@ -6,24 +6,39 @@
  *
  * @param thisRef - The object instance whose prototype methods will be bound to itself.
  */
-export const bindAllMethods = (thisRef: Record<string, any>): void => {
+export const bindAllMethods = (thisRef: object): void => {
   const descriptors = Object.entries(
-    Object.getOwnPropertyDescriptors(Reflect.getPrototypeOf(thisRef))
+    Object.getOwnPropertyDescriptors(Reflect.getPrototypeOf(thisRef)),
   );
   for (const [classMemberName, descriptor] of descriptors) {
     if (
       classMemberName !== "constructor" &&
       typeof descriptor.value === "function"
     ) {
-      thisRef[classMemberName] = thisRef[classMemberName].bind(thisRef);
+      Reflect.set(
+        thisRef,
+        classMemberName,
+        Reflect.get(thisRef, classMemberName).bind(thisRef),
+      );
     }
   }
 };
 
-// Extend ObjectConstructor to include bindAllMethods
 declare global {
+  /**
+   * Optional property to specify a human-readable name for the function.
+   * 
+   * This property is commonly used in development tools and libraries (such as React)
+   * to preserve or display the function's name, especially before code is minified
+   * or obfuscated by JavaScript bundlers.
+   */
+  interface Function {
+    displayName?: string;
+  }
+
   interface ObjectConstructor {
-    bindAllMethods(thisRef: Record<string, any>): void;
+    /** {@linkcode} */
+    bindAllMethods(thisRef: object): void;
   }
 }
 

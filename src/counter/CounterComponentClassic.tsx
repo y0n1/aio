@@ -1,7 +1,7 @@
 import { CounterView } from "./CounterView.tsx";
 import { useCounterViewModel } from "./useCounterViewModel.ts";
 
-export const CounterComponent = (): React.ReactElement => {
+export const CounterComponentClassic = (): React.ReactElement => {
     const vm = useCounterViewModel();
 
     return (
@@ -12,4 +12,4 @@ export const CounterComponent = (): React.ReactElement => {
         />
     );
 };
-CounterComponent.displayName = "CounterComponent";
+CounterComponentClassic.displayName = "CounterComponentClassic";
