@@ -1,0 +1,12 @@
+html, body {
+    background: #181a20;
+    color: #e0e6ef;
+    font-family: "Inter", system-ui, sans-serif;
+    margin: 0;
+    padding: 0;
+    transition: background 0.3s, color 0.3s;
+}
+
+::selection {
+    background: #26304a;
+}
