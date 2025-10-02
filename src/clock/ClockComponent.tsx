@@ -1,4 +1,4 @@
-import { useViewModel } from "../lib/useViewModel";
+import { useViewModel } from "../lib/useViewModelWithStore.ts";
 import { ClockView } from "./ClockView";
 import { ClockViewModel } from "./ClockViewModel";
 

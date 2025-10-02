@@ -1,23 +1,16 @@
-import { ChangeNotifier } from "../lib/ChangeNotifier.ts";
+import { ViewModelBase } from "../lib/ViewModelBase.ts";
 
-export class CounterViewModel extends ChangeNotifier {
+export class CounterViewModel extends ViewModelBase {
   static get displayName() {
     return "CounterViewModel";
   }
 
-  #instanceId = crypto.randomUUID();
   #count: number;
 
   constructor(initialValue = 0) {
     super();
     this.#count = initialValue;
-    Object.bindAllMethods(this);
-    // this.increase = this.increase.bind(this);
-    // this.decrease = this.decrease.bind(this);
-  }
-
-  get instanceId(): string {
-    return this.#instanceId;
+    Object.bindAllFunctions(this);
   }
 
   get count(): number {
@@ -26,11 +19,11 @@ export class CounterViewModel extends ChangeNotifier {
 
   increase(): void {
     this.#count++;
-    super.notifyListeners(this, ["count", this.#count]);
+    this.notifyListeners(this, ["count", this.#count]);
   }
 
   decrease(): void {
     this.#count--;
-    super.notifyListeners(this, ["count", this.#count]);
+    this.notifyListeners(this, ["count", this.#count]);
   }
 }

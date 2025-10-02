@@ -5,7 +5,7 @@ export class ClockViewModel extends ViewModel {
 
     constructor(model: ClockModel) {
         super();
-        Object.bindAllMethods(this);
+        Object.bindAllFunctions(this);
     }
 
     get hours(): string {

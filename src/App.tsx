@@ -3,6 +3,7 @@ import {
   CounterComponentClassic,
   CounterComponentMvvm,
 } from "./counter/mod.ts";
+import { useEffect, useRef, useState } from "react";
 
 const styles = css`
   max-width: 600px;
@@ -18,13 +19,25 @@ const styles = css`
 `;
 
 export default function App(): React.ReactElement {
+  const [turnOn, setTurnOn] = useState(true);
+  const intervalRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    intervalRef.current = globalThis.setTimeout(() => {
+      setTurnOn(false);
+    }, 5000);
+    return () => {
+      globalThis.clearTimeout(intervalRef.current!);
+    };
+  }, []);
+
   return (
     <div className={styles}>
       <h1>Hello counters!</h1>
 
       <CounterComponentClassic />
       <br />
-      <CounterComponentMvvm />
+      { turnOn && <CounterComponentMvvm /> }
     </div>
   );
 }

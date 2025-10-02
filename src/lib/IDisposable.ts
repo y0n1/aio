@@ -1,4 +1,4 @@
 export interface IDisposable {
-    dispose(): void;
+    [Symbol.dispose](): void;
     get isDisposed(): boolean;
 }

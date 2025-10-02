@@ -1,9 +1,22 @@
-import type {
-    IChangeEventListener,
-    IChangeNotifier,
-} from "./IChangeNotifier.ts";
 import type { IDisposable } from "./IDisposable.ts";
 import { ChangeEvent } from "./ChangeEvent.ts";
+
+export type IChangeEventListener = <
+    TInvoker extends object,
+    TChanges extends Array<[string, unknown]>,
+>(
+    event: ChangeEvent<TInvoker, TChanges>,
+) => void;
+
+export interface IChangeNotifier {
+    get hasListeners(): boolean;
+    notifyListeners<TInvoker extends object>(
+        invoker: TInvoker,
+        ...changes: Array<[string, unknown]>
+    ): void;
+    addListener(listener: IChangeEventListener): void;
+    removeListener(listener: IChangeEventListener): void;
+}
 
 /**
  * Base class for MVVM architecture that implements IChangeNotifier.
@@ -14,9 +27,15 @@ export class ChangeNotifier implements IChangeNotifier, IDisposable {
         return "ChangeNotifier";
     }
 
-    #eventTarget: EventTarget | null = new EventTarget();
-    #listeners: Set<IChangeEventListener> | null = new Set();
-    #isDisposed = false;
+    #eventTarget: EventTarget | null;
+    #listeners: Set<IChangeEventListener> | null;
+    #isDisposed: boolean;
+
+    constructor() {
+        this.#eventTarget = new EventTarget();
+        this.#listeners = new Set();
+        this.#isDisposed = false;
+    }
 
     get isDisposed(): boolean {
         return this.#isDisposed;
@@ -27,7 +46,10 @@ export class ChangeNotifier implements IChangeNotifier, IDisposable {
      * @param invoker The instance invoking the change.
      * @param changes List of changes to notify listeners about.
      */
-    notifyListeners(invoker: this, ...changes: Array<[string, unknown]>): void {
+    notifyListeners<TInvoker extends object>(
+        invoker: TInvoker,
+        ...changes: Array<[string, unknown]>
+    ): void {
         if (this.#isDisposed) return;
         const event = new ChangeEvent(invoker, changes);
         this.#eventTarget!.dispatchEvent(event);
@@ -38,7 +60,7 @@ export class ChangeNotifier implements IChangeNotifier, IDisposable {
      * @param listener Callback to invoke on change.
      */
     addListener(listener: IChangeEventListener): void {
-        if (this.#isDisposed) return;
+        if (this.#isDisposed || this.#listeners!.has(listener)) return;
         this.#eventTarget!.addEventListener(
             ChangeEvent.eventName,
             listener as EventListener,
@@ -59,14 +81,16 @@ export class ChangeNotifier implements IChangeNotifier, IDisposable {
         if (this.#listeners!.has(listener)) {
             this.#listeners!.delete(listener);
         } else {
-            console.warn("Attempted to remove a listener that was never added!");
+            console.warn(
+                "Attempted to remove a listener that was never added!",
+            );
         }
     }
 
     /**
      * Dispose the ChangeNotifier, removing all listeners and nullifying its EventTarget.
      */
-    dispose(): void {
+    [Symbol.dispose](): void {
         if (this.#isDisposed) return;
         for (const listener of this.#listeners!) {
             this.#eventTarget!.removeEventListener(
