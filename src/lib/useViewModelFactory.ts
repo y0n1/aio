@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useReducer, useRef } from "react";
 import type { ViewModelBase } from "./ViewModelBase.ts";
-import { logChange } from "../utils/logging.ts";
 
 /**
  * Returns a stable reference to an array as long as its shallow contents do not change.
@@ -43,29 +42,20 @@ export function useViewModelFactory<TViewModel extends ViewModelBase>(
     );
   }
   
-  const [, updateView] = useReducer((b) => !b, true);
-
   const stableDeps = useShallowStableArray(deps);
+  
+  const [, updateView] = useReducer((b) => !b, true);
+  
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const vm = useMemo(factory, stableDeps);
 
   useEffect(() => {
-    console.log(
-      `[DID MOUNT] VMID: ${vm.instanceId} | Disposed: ${vm.isDisposed}`,
-    );
     vm.addListener(updateView);
-    vm.addListener(logChange);
     return () => {
-      console.log(
-        `[WILL UNMOUNT] VMID: ${vm.instanceId} | Disposed: ${vm.isDisposed}`,
-      );
       if (!import.meta.env.DEV) {
-        console.log(`[WILL DISPOSE] VMID: ${vm.instanceId}`);
         vm[Symbol.dispose]();
       } else {
-        console.log(`[WILL REMOVE LISTENERS] VMID: ${vm.instanceId}`);
         vm.removeListener(updateView);
-        vm.removeListener(logChange);
       }
     };
   }, [vm]);
