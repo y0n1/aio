@@ -25,7 +25,7 @@ export default function App(): React.ReactElement {
   useEffect(() => {
     intervalRef.current = globalThis.setTimeout(() => {
       setTurnOn(false);
-    }, 5000);
+    }, 10_000);
     return () => {
       globalThis.clearTimeout(intervalRef.current!);
     };
@@ -35,9 +35,23 @@ export default function App(): React.ReactElement {
     <div className={styles}>
       <h1>Hello counters!</h1>
 
-      <CounterComponentClassic />
+      Classic <CounterComponentClassic />
       <br />
-      { turnOn && <CounterComponentMvvm /> }
+      {turnOn && (
+        <>
+          MVVM <CounterComponentMvvm />
+          MVVM <CounterComponentMvvm />
+          MVVM <CounterComponentMvvm />
+          MVVM <CounterComponentMvvm />
+          MVVM <CounterComponentMvvm />
+          MVVM <CounterComponentMvvm />
+          MVVM <CounterComponentMvvm />
+          MVVM <CounterComponentMvvm />
+          MVVM <CounterComponentMvvm />
+          MVVM <CounterComponentMvvm />
+          MVVM <CounterComponentMvvm />
+        </>
+      )}
     </div>
   );
 }

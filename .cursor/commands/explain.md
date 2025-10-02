@@ -1,1 +1,0 @@
-Explain how the code works in a new chat tab

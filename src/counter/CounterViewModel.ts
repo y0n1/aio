@@ -7,9 +7,9 @@ export class CounterViewModel extends ViewModelBase {
 
   #count: number;
 
-  constructor(initialValue = 0) {
+  constructor() {
     super();
-    this.#count = initialValue;
+    this.#count = 0;
     Object.bindAllFunctions(this);
   }
 

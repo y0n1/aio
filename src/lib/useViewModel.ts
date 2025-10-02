@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useReducer, useRef } from "react";
-import type { ViewModelBase } from "./ViewModelBase.ts";
+import type { ViewModelBase, ViewModelConstructor } from "./ViewModelBase.ts";
+import { logChange } from "../utils/logging.ts";
 
 /**
  * Returns a stable reference to an array as long as its shallow contents do not change.
@@ -9,7 +10,7 @@ import type { ViewModelBase } from "./ViewModelBase.ts";
  * @param arr - The array to track for shallow stability.
  * @returns A stable array reference unless shallow contents change.
  */
-function useShallowStableArray<T extends readonly unknown[]>(arr: T): T {
+function useShallowStableArray<T extends readonly unknown[]>(...arr: T): T {
   const ref = useRef<T>(arr);
   if (
     ref.current.length !== arr.length ||
@@ -29,32 +30,35 @@ function useShallowStableArray<T extends readonly unknown[]>(arr: T): T {
  *
  * @template TViewModel - The type of the ViewModel, extending ViewModelBase.
  * @param factory - A function that returns a new instance of the ViewModel.
- * @param deps - Dependency array for memoizing the ViewModel instance; the first element צודאmust be the ViewModel constructor, followed by its arguments if it has any.
+ * @param deps - Dependency array for memoizing the ViewModel instance; the first element must be the ViewModel constructor, followed by its arguments if it has any.
  * @returns The memoized ViewModel instance.
  */
-export function useViewModelFactory<TViewModel extends ViewModelBase>(
-  factory: () => TViewModel,
-  deps: readonly unknown[],
-): TViewModel {
-  if (deps.length === 0) {
-    throw new Error(
-      "useViewModelFactory: deps array must not be empty, you must provide the ViewModel constructor, followed by its arguments if it has any.",
-    );
-  }
-  
-  const stableDeps = useShallowStableArray(deps);
+export function useViewModel<
+  TViewModelClass extends ViewModelConstructor<
+    ConstructorParameters<TViewModelClass>,
+    InstanceType<typeof ViewModelBase>
+  >,
+>(
+  viewModelClass: TViewModelClass,
+  ...args: ConstructorParameters<TViewModelClass>
+): InstanceType<TViewModelClass> {
   const [, updateView] = useReducer((b) => !b, true);
-  
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const vm = useMemo(factory, stableDeps);
+  const stableDeps = useShallowStableArray(viewModelClass, ...args);
+  const vm = useMemo(
+    () => new viewModelClass(...args),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    stableDeps,
+  ) as InstanceType<TViewModelClass>;
 
   useEffect(() => {
     vm.addListener(updateView);
+    vm.addListener(logChange);
     return () => {
       if (!import.meta.env.DEV) {
         vm[Symbol.dispose]();
       } else {
         vm.removeListener(updateView);
+        vm.removeListener(logChange);
       }
     };
   }, [vm]);

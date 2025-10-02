@@ -5,6 +5,13 @@ import {
 } from "./ChangeNotifier.ts";
 import type { IDisposable } from "./IDisposable.ts";
 
+export type ViewModelConstructor<
+  TArgs extends unknown[],
+  TInstance extends ViewModelBase,
+> = new (
+  ...args: TArgs
+) => TInstance;
+
 export abstract class ViewModelBase implements IChangeNotifier, IDisposable {
   #instanceId: string;
   #changeNotifier: ChangeNotifier;
