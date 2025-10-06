@@ -892,6 +892,12 @@
           "npm:vite@*"
         ]
       },
+      "packages/vite-plugin-deno-workspace": {
+        "dependencies": [
+          "npm:vite@*",
+          "npm:vite@^7.1.7"
+        ]
+      },
       "playground": {
         "dependencies": [
           "npm:@emotion/css@^11.13.5",

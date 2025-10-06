@@ -1,22 +1,15 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import * as path from "node:path";
+import denoWorkspacePlugin from "@y0n1/vite-plugin-deno-workspace";
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
+    denoWorkspacePlugin(),
     react({
       babel: {
         plugins: [["babel-plugin-react-compiler"]],
       },
     }),
   ],
-  resolve: {
-    alias: {
-      "@y0n1/react-mvvm": path.resolve(
-        __dirname,
-        "../../packages/react-mvvm/mod.ts",
-      ),
-    },
-  },
 });
