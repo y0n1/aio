@@ -3,9 +3,10 @@ import {
   CounterComponentClassic,
   CounterComponentMvvm,
 } from "./components/counter/mod.ts";
+import React from "react";
 
 const styles = css`
-  max-width: 600px;
+  max-width: 300px;
   margin: 2rem auto;
   background: #232634;
   border-radius: 1rem;
@@ -18,13 +19,25 @@ const styles = css`
 `;
 
 export default function App(): React.ReactElement {
+  const [show, setShow] = React.useState(true);
+  React.useEffect(() => {
+    const timer = setInterval(() => setShow(s => !s), 5_000);
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <div className={styles}>
       <h1>Hello counters!</h1>
 
       Classic <CounterComponentClassic />
       <br />
-      MVVM <CounterComponentMvvm />
+      {show
+        ? (
+          <>
+            MVVM <CounterComponentMvvm />
+          </>
+        )
+        : <p>MVVM component expired</p>}
     </div>
   );
 }

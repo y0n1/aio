@@ -3,9 +3,15 @@
     "version": "1.0.0-rc.1",
     "exports": "./mod.ts",
     "compilerOptions": {
-        "types": ["npm:vite/client", "npm:@types/react"]
+        "types": ["npm:vite/client", "npm:@types/react"],
+        "jsx": "react-jsx"
     },
     "imports": {
         "react": "npm:react@^19.2.0"
+    },
+    "lint": {
+        "rules": {
+            "tags": ["recommended", "react"]
+        }
     }
 }

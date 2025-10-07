@@ -1,0 +1,5 @@
+{
+    "name": "@y0n1/polyfills",
+    "version": "1.0.0-rc.1",
+    "exports": "./mod.ts"
+}

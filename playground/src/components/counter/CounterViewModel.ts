@@ -9,6 +9,7 @@ export class CounterViewModel extends ViewModelBase {
 
   constructor() {
     super();
+    this.enableLogging();
     this.#count = 0;
     this.increase = this.increase.bind(this);
     this.decrease = this.decrease.bind(this);
@@ -18,13 +19,16 @@ export class CounterViewModel extends ViewModelBase {
     return this.#count;
   }
 
-  increase(): void {
-    this.#count++;
+  set count(value: number) {
+    this.#count = value;
     this.notifyListeners(this, ["count", this.#count]);
   }
 
+  increase(): void {
+    this.count++;
+  }
+
   decrease(): void {
-    this.#count--;
-    this.notifyListeners(this, ["count", this.#count]);
+    this.count--;
   }
 }

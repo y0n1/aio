@@ -3,10 +3,13 @@
   "version": "0.1.0",
   "exports": "./mod.ts",
   "compilerOptions": {
-    "lib": ["ES2023"],
+    "lib": ["deno.ns", "ES2023"],
     "types": ["npm:vite/client"]
   },
   "imports": {
     "vite": "npm:vite@^7.1.7"
+  },
+  "test": {
+    "include": ["./mod_test.ts"]
   }
 }
