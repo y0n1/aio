@@ -11,6 +11,7 @@ export class CounterViewModel extends ViewModelBase {
     super();
     this.enableLogging();
     this.#count = 0;
+    
     this.increase = this.increase.bind(this);
     this.decrease = this.decrease.bind(this);
   }

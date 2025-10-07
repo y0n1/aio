@@ -1,9 +1,9 @@
+import { type ReactNode, useEffect, useState } from "react";
 import { css } from "@emotion/css";
 import {
   CounterComponentClassic,
   CounterComponentMvvm,
 } from "./components/counter/mod.ts";
-import React from "react";
 
 const styles = css`
   max-width: 300px;
@@ -18,10 +18,11 @@ const styles = css`
   align-items: center;
 `;
 
-export default function App(): React.ReactElement {
-  const [show, setShow] = React.useState(true);
-  React.useEffect(() => {
-    const timer = setInterval(() => setShow(s => !s), 5_000);
+export default function App(): ReactNode {
+  const [show, setShow] = useState(true);
+
+  useEffect(() => {
+    const timer = setInterval(() => setShow((s) => !s), 5_000);
     return () => clearInterval(timer);
   }, []);
 
