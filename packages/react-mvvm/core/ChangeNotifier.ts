@@ -1,26 +1,26 @@
-import type { AddChangeEventListenerOptions } from "./AddChangeEventListenerOptions.ts";
-import type { ChangeEventListener } from "./ChangeEventListener.ts";
-import { ChangeEvent } from "./ChangeEvent.ts";
+import type { AddListenerOptions } from "./AddListenerOptions.ts";
 
 /**
- * The ChangeNotifier class provides a mechanism for managing and notifying change event listeners.
+ * ChangeNotifier provides a mechanism for notifying listeners when changes occur.
  *
  * @remarks
  * This class is intended to be used as a base for observable objects that need to notify subscribers
  * when changes occur. Listeners can be registered with optional configuration, such as one-time invocation.
  *
+ * It is O(1) for adding and removing listeners and O(N) for dispatching notifications (where N is the number of listeners).
+ *
  * @example
  * ```ts
  * class MyModel extends ChangeNotifier {
  *   set value(val: number) {
- *     this._value = val;
- *     this.notifyListeners(this, ["value", val]);
+ *     this.#value = val;
+ *     this.notifyListeners();
  *   }
  * }
  *
  * const model = new MyModel();
- * model.addListener((event) => {
- *   console.log(event.changes);
+ * model.addListener(() => {
+ *   console.log("Value changed!");
  * });
  * model.value = 42; // Listener is notified
  * ```
@@ -30,6 +30,7 @@ import { ChangeEvent } from "./ChangeEvent.ts";
 export class ChangeNotifier {
   /**
    * Returns the display name of the class.
+   * @returns {string}
    */
   static get displayName(): string {
     return "ChangeNotifier";
@@ -37,46 +38,54 @@ export class ChangeNotifier {
 
   /**
    * Internal map of listeners and their associated options.
+   * @private
    */
-  #listeners: Map<
-    ChangeEventListener,
-    AddChangeEventListenerOptions | undefined
-  >;
+  #listeners: Map<VoidFunction, AddListenerOptions | undefined>;
+  /**
+   * Indicates whether this ChangeNotifier has been disposed.
+   * @private
+   */
+  #isDisposed: boolean;
 
   /**
    * Initializes a new instance of the ChangeNotifier class.
    */
   constructor() {
     this.#listeners = new Map();
+    this.#isDisposed = false;
   }
 
   /**
-   * Indicates whether there are any registered change event listeners.
+   * Indicates whether there are any registered listeners.
    *
-   * @returns True if at least one listener is registered; otherwise, false.
+   * @returns {boolean} True if at least one listener is registered and the notifier is not disposed; otherwise, false.
    */
   get hasListeners(): boolean {
-    return this.#listeners.size > 0;
+    return this.#listeners.size > 0 && !this.#isDisposed;
+  }
+
+  /**
+   * Indicates whether this ChangeNotifier has been disposed.
+   *
+   * @returns {boolean} True if the ChangeNotifier has been disposed; otherwise, false.
+   */
+  get isDisposed(): boolean {
+    return this.#isDisposed;
   }
 
   /**
    * Notifies all registered listeners of a change event.
    *
-   * @typeParam TInvoker - The type of the object invoking the notification.
-   * @param invoker - The object that triggered the change.
-   * @param changes - A list of property changes, each represented as a tuple of property name and new value.
-   *
    * @remarks
-   * Each listener will receive a {@link ChangeEvent} describing the changes.
-   * If a listener was registered with the `once` option, it will be removed after being notified.
+   * Each listener will be called. If a listener was registered with the `once` option, it will be removed after being notified.
    */
-  notifyListeners<TInvoker extends object>(
-    invoker: TInvoker,
-    ...changes: Array<[string, unknown]>
-  ): void {
-    const event = new ChangeEvent(invoker, changes);
-    for (const [listener, options] of this.#listeners) {
-      listener(event);
+  notifyListeners(): void {
+    if (this.#isDisposed) {
+      return;
+    }
+
+    for (const [listener, options] of this.#listeners.entries()) {
+      listener();
       if (options?.once) {
         this.#listeners.delete(listener);
       }
@@ -87,18 +96,19 @@ export class ChangeNotifier {
    * Registers a change event listener.
    *
    * @param listener - The function to be called when a change event occurs.
-   * @param options - Optional configuration for the listener (e.g., `once` to remove after first call).
+   * @param options - Optional configuration for the listener. See {@linkcode AddListenerOptions}.
    *
    * @remarks
-   * If the listener is already registered, this method does nothing.
+   * If the listener is already registered, the listener will be updated.
    */
   addListener(
-    listener: ChangeEventListener,
-    options?: AddChangeEventListenerOptions,
+    listener: VoidFunction,
+    options?: AddListenerOptions,
   ): void {
-    if (!this.#listeners.has(listener)) {
-      this.#listeners.set(listener, options);
+    if (this.#isDisposed) {
+      return;
     }
+    this.#listeners.set(listener, options);
   }
 
   /**
@@ -109,7 +119,21 @@ export class ChangeNotifier {
    * @remarks
    * If the listener is not registered, this method does nothing.
    */
-  removeListener(listener: ChangeEventListener): void {
+  removeListener(listener: VoidFunction): void {
+    if (this.#isDisposed) {
+      return;
+    }
     this.#listeners.delete(listener);
+  }
+
+  /**
+   * Disposes the ChangeNotifier, removing all listeners and preventing further notifications.
+   * 
+   * @remarks
+   * Future calls to any method will do nothing.
+   */
+  [Symbol.dispose](): void {
+    this.#isDisposed = true;
+    this.#listeners.clear();
   }
 }

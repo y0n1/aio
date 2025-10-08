@@ -1,28 +1,27 @@
 import { useEffect, useMemo, useReducer } from "react";
-import type { ViewModelBase, ViewModelConstructor } from "../core/ViewModelBase.ts";
+import { type ChangeNotifier } from "../core/ChangeNotifier.ts";
 
 /**
  * React hook for instantiating and subscribing to a ViewModel.
  *
  * This hook creates a new instance of the given ViewModel class and subscribes the component
  * to its change notifications. When the ViewModel notifies of changes, the component will re-render.
- * The ViewModel instance is memoized based on the class and constructor arguments.
+ * The ViewModel instance is memoized based on the class and constructor and its arguments.
  *
- * @template TViewModelClass - The constructor type of the ViewModel.
+ * @template TViewModelClass - The constructor type of the ViewModel, it must be a subclass of {@linkcode ChangeNotifier}.
  * @param viewModelClass - The ViewModel class to instantiate.
  * @param args - Arguments to pass to the ViewModel constructor.
  * @returns The instantiated ViewModel.
  *
  * @example
  * ```tsx
- * const vm = useViewModel(CounterViewModel, args);
+ * const vm = useViewModel(CounterViewModel, arg1, arg2, otherArgs);
  * ```
  */
 export function useViewModel<
-  TViewModelClass extends ViewModelConstructor<
-    ConstructorParameters<TViewModelClass>,
-    InstanceType<typeof ViewModelBase>
-  >,
+  TViewModelClass extends new (
+    ...args: ConstructorParameters<TViewModelClass>
+  ) => ChangeNotifier,
 >(
   viewModelClass: TViewModelClass,
   ...args: ConstructorParameters<TViewModelClass>
