@@ -1,5 +1,3 @@
-import type { AddListenerOptions } from "./AddListenerOptions.ts";
-
 /**
  * ChangeNotifier provides a mechanism for notifying listeners when changes occur.
  *
@@ -128,7 +126,7 @@ export class ChangeNotifier {
 
   /**
    * Disposes the ChangeNotifier, removing all listeners and preventing further notifications.
-   * 
+   *
    * @remarks
    * Future calls to any method will do nothing.
    */
@@ -136,4 +134,8 @@ export class ChangeNotifier {
     this.#isDisposed = true;
     this.#listeners.clear();
   }
+}
+
+interface AddListenerOptions {
+  once?: boolean;
 }
