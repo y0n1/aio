@@ -1,0 +1,34 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "2.0.0",
+  "configurations": [
+    {
+      "name": "Debug vite-plugin-deno-workspace",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "deno",
+      "runtimeArgs": [
+        "run",
+        "-A",
+        "--inspect-brk",
+        "vite",
+        "-c",
+        "config/vite.config.ts"
+      ],
+      "cwd": "${workspaceFolder}/playground",
+      "attachSimplePort": 9229,
+      "outputCapture": "std"
+    },
+    {
+      "name": "Launch playground",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}/playground",
+      "preLaunchTask": "Start dev server",
+      "postDebugTask": "Stop dev server"
+    }
+  ]
+}

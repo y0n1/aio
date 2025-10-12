@@ -1,0 +1,43 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Start dev server",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}/playground"
+      },
+      "command": "deno",
+      "args": ["task", "dev"],
+      "isBackground": true,
+      "problemMatcher": [
+        {
+          "owner": "vite",
+          "pattern": [
+            {
+              "regexp": ".",
+              "file": 1,
+              "location": 2,
+              "message": 3
+            }
+          ],
+          "background": {
+            "activeOnStart": true,
+            "beginsPattern": "VITE v",
+            "endsPattern": "ready in"
+          }
+        }
+      ]
+    },
+    {
+      "label": "Stop dev server",
+      "type": "shell",
+      "command": "pkill",
+      "args": ["-f", "deno task dev"],
+      "presentation": {
+        "reveal": "never",
+        "close": true
+      }
+    }
+  ]
+}
