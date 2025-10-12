@@ -1,6 +1,6 @@
 {
   "name": "@y0n1/vite-plugin-deno-workspace",
-  "version": "0.1.0",
+  "version": "1.0.0-rc.1",
   "exports": "./mod.ts",
   "compilerOptions": {
     "lib": ["deno.ns", "ES2023"],
@@ -8,8 +8,5 @@
   },
   "imports": {
     "vite": "npm:vite@^7.1.7"
-  },
-  "test": {
-    "include": ["./mod_test.ts"]
   }
 }
