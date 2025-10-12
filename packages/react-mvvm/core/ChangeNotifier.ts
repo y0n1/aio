@@ -1,3 +1,6 @@
+import { AddListenerOptions, Listenable } from "./Listenable.ts";
+import { Disposable } from "./Disposable.ts";
+
 /**
  * ChangeNotifier provides a mechanism for notifying listeners when changes occur.
  *
@@ -25,7 +28,7 @@
  *
  * @public
  */
-export class ChangeNotifier {
+export class ChangeNotifier implements Listenable, Disposable {
   /**
    * Returns the display name of the class.
    * @returns {string}
@@ -134,8 +137,4 @@ export class ChangeNotifier {
     this.#isDisposed = true;
     this.#listeners.clear();
   }
-}
-
-interface AddListenerOptions {
-  once?: boolean;
 }
