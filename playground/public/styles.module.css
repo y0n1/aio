@@ -1,12 +1,24 @@
-html, body {
-    background: #181a20;
-    color: #e0e6ef;
-    font-family: "Inter", system-ui, sans-serif;
-    margin: 0;
-    padding: 0;
-    transition: background 0.3s, color 0.3s;
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: "Inter", system-ui, sans-serif;
+  color: #e0e6ef;
+  height: 100vh;
+}
+
+body {
+  background: #181a20;
+  margin: 0;
+  padding: 2rem;
+  height: 100%;
+}
+
+div#root {
+  height: 100%;
 }
 
 ::selection {
-    background: #26304a;
+  background: #26304a;
 }

@@ -1,44 +1,24 @@
-import { type ReactNode, useEffect, useState } from "react";
 import { css } from "@emotion/css";
-import {
-  CounterComponentClassic,
-  CounterComponentMvvm,
-} from "./components/counter/mod.ts";
+import { TodoListMvvm } from "./components/todos/TodoListMvvm.tsx";
 
 const styles = css`
-  max-width: 300px;
-  margin: 2rem auto;
+  min-height: 24rem;
   background: #232634;
   border-radius: 1rem;
   box-shadow: 0 2px 16px #0008;
-  padding: 2rem 2.5rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
   align-items: center;
+  gap: 1rem;
+  height: 100%;
 `;
 
-export default function App(): ReactNode {
-  const [show, setShow] = useState(true);
-
-  useEffect(() => {
-    const timer = setInterval(() => setShow((s) => !s), 5_000);
-    return () => clearInterval(timer);
-  }, []);
-
+export default function App(): React.ReactNode {
   return (
     <div className={styles}>
-      <h1>Hello counters!</h1>
+      <h1>Hello playground!</h1>
 
-      Classic <CounterComponentClassic />
-      <br />
-      {show
-        ? (
-          <>
-            MVVM <CounterComponentMvvm />
-          </>
-        )
-        : <p>MVVM component expired</p>}
+      <TodoListMvvm />
     </div>
   );
 }

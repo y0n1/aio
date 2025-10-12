@@ -1,8 +1,7 @@
 {
   "tasks": {
     "dev": "vite -c config/vite.config.ts",
-    "build": "tsc -b && vite build -c config/vite.config.ts",
-    "lint": "eslint -c config/eslint.config.js .",
+    "lint": "deno lint",
     "preview": "vite preview -c config/vite.config.ts"
   },
   "lint": {
