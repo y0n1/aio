@@ -1,4 +1,4 @@
-import { AddListenerOptions } from "./Listenable.ts";
+import { IAddListenerOptions } from "./IListenable.ts";
 import { ChangeNotifier } from "./ChangeNotifier.ts";
 
 /**
@@ -22,7 +22,7 @@ export class Observable<T> {
   #value: T;
 
   /** Internal notifier for managing listeners */
-  #changeNotifier: ChangeNotifier;
+  readonly #changeNotifier: ChangeNotifier = new ChangeNotifier();
 
   /**
    * Create a new Observable with an initial value.
@@ -30,7 +30,6 @@ export class Observable<T> {
    */
   constructor(value: T) {
     this.#value = value;
-    this.#changeNotifier = new ChangeNotifier();
   }
 
   /**
@@ -54,15 +53,16 @@ export class Observable<T> {
   }
 
   /**
-   * Subscribe to changes of the value.
-   * The listener will be called whenever the value changes.
+   * Subscribes a listener to changes of the value.
+   * The listener will be called with the new value whenever the value changes.
    *
    * @param listener - A function called with the new value after every change.
+   * @param options - Optional configuration for the listener. See {@linkcode IAddListenerOptions}.
    * @returns A function to unsubscribe the listener.
    */
   subscribe(
     listener: (value: T) => void,
-    options?: AddListenerOptions,
+    options?: IAddListenerOptions,
   ): VoidFunction {
     const wrappedListener = () => listener(this.#value);
     this.#changeNotifier.addListener(wrappedListener, options);

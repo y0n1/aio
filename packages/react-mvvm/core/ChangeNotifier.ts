@@ -1,5 +1,5 @@
-import { AddListenerOptions, Listenable } from "./Listenable.ts";
-import { Disposable } from "./Disposable.ts";
+import { IAddListenerOptions, IListenable } from "./IListenable.ts";
+import { IDisposable } from "./IDisposable.ts";
 
 /**
  * ChangeNotifier provides a mechanism for notifying listeners when changes occur.
@@ -28,20 +28,12 @@ import { Disposable } from "./Disposable.ts";
  *
  * @public
  */
-export class ChangeNotifier implements Listenable, Disposable {
-  /**
-   * Returns the display name of the class.
-   * @returns {string}
-   */
-  static get displayName(): string {
-    return "ChangeNotifier";
-  }
-
+export class ChangeNotifier implements IListenable, IDisposable {
   /**
    * Internal map of listeners and their associated options.
    * @private
    */
-  #listeners: Map<VoidFunction, AddListenerOptions | undefined>;
+  #listeners: Map<VoidFunction, IAddListenerOptions | undefined>;
   /**
    * Indicates whether this ChangeNotifier has been disposed.
    * @private
@@ -97,14 +89,14 @@ export class ChangeNotifier implements Listenable, Disposable {
    * Registers a change event listener.
    *
    * @param listener - The function to be called when a change event occurs.
-   * @param options - Optional configuration for the listener. See {@linkcode AddListenerOptions}.
+   * @param options - Optional configuration for the listener. See {@linkcode IAddListenerOptions}.
    *
    * @remarks
    * If the listener is already registered, the listener will be updated.
    */
   addListener(
     listener: VoidFunction,
-    options?: AddListenerOptions,
+    options?: IAddListenerOptions,
   ): void {
     if (this.#isDisposed) {
       return;
@@ -133,8 +125,12 @@ export class ChangeNotifier implements Listenable, Disposable {
    * @remarks
    * Future calls to any method will do nothing.
    */
-  [Symbol.dispose](): void {
+  dispose(): void {
     this.#isDisposed = true;
     this.#listeners.clear();
+  }
+
+  [Symbol.dispose](): void {
+    this.dispose();
   }
 }

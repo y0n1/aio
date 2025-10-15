@@ -1,6 +1,10 @@
-import { useEffect, useReducer } from "react";
+import { useEffect } from "react";
+import {
+  useIsFirstMount,
+  useSingleton,
+  useUpdateView,
+} from "./internal/hooks.ts";
 import type { ChangeNotifier } from "../core/ChangeNotifier.ts";
-import { useSingleton } from "./useSingleton.ts";
 
 /**
  * Instantiates a {@linkcode ChangeNotifier} subscribing the component to its change notifications.
@@ -45,15 +49,20 @@ export function useChangeNotifier<
   ctor: TCtor,
   ...args: ConstructorParameters<TCtor>
 ): InstanceType<TCtor> {
-  const [, updateView] = useReducer((b) => !b, true);
+  const updateView = useUpdateView();
+  const isFirstMount = useIsFirstMount(); // Used to workaround limitations of React's StricMode double render
   const instance = useSingleton<ChangeNotifier, TCtor>(ctor, ...args);
 
   useEffect(() => {
     instance.addListener(updateView);
     return () => {
-      instance.removeListener(updateView);
+      if (isFirstMount) {
+        instance.removeListener(updateView);
+      } else {
+        instance[Symbol.dispose]();
+      }
     };
-  }, [instance]);
+  }, []);
 
   return instance;
 }

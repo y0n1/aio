@@ -74,3 +74,21 @@ Deno.test("useChangeNotifier forwards constructor arguments to the notifier", ()
   assertEquals(notifier.initialValue, 42);
   assertStrictEquals(notifier.label, "counter");
 });
+
+Deno.test("useChangeNotifier removes the listener when the component unmounts", () => {
+  const { result, unmount } = renderHook(() => useChangeNotifier(CounterNotifier));
+  const notifier = result.current;
+
+  unmount();
+
+  assertEquals(notifier.hasListeners, false);
+});
+
+Deno.test("useChangeNotifier disposes the notifier when the component unmounts", () => {
+  const { result, unmount } = renderHook(() => useChangeNotifier(CounterNotifier));
+  const notifier = result.current;
+
+  unmount();
+
+  assertEquals(notifier.isDisposed, true);
+});
