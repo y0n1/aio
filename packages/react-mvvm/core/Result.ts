@@ -11,7 +11,7 @@
  * // Creating a failure result:
  * const failure: IResult<never, TypeError> = Results.Error(new TypeError("Oops!"));
  */
-export type IResult<T, E extends Error = Error> =
+export type IResult<T = void, E extends Error = Error> =
   | SuccessResult<T>
   | FailureResult<E>;
 
@@ -26,7 +26,7 @@ export type IResult<T, E extends Error = Error> =
  *   console.log(result.value); // 123
  * }
  */
-class SuccessResult<T> {
+class SuccessResult<T = void> {
   /**
    * Discriminant property indicating a successful result.
    */
@@ -52,7 +52,7 @@ class SuccessResult<T> {
  *   console.log(result.error); // Error: Failed
  * }
  */
-class FailureResult<E extends Error> {
+class FailureResult<E extends Error = Error> {
   /**
    * Discriminant property indicating a failed result.
    */
@@ -80,12 +80,14 @@ class FailureResult<E extends Error> {
  * ```
  */
 export class Results {
+  private constructor() {}
+  
   /**
    * Creates a successful result carrying the provided value.
    * @param value - The value of a successful operation.
    * @returns An {@link IResult} representing success.
    */
-  static OK<T>(value?: T): IResult<T, never> {
+  static OK<T = void>(value?: T): IResult<T, never> {
     return Object.freeze(new SuccessResult(value));
   }
 
@@ -94,7 +96,7 @@ export class Results {
    * @param error - The error describing why the operation failed.
    * @returns An {@link IResult} representing failure.
    */
-  static Error<E extends Error>(error: E): IResult<never, E> {
+  static Error<E extends Error = Error>(error: E): IResult<never, E> {
     return Object.freeze(new FailureResult(error));
   }
 }

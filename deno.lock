@@ -2,7 +2,9 @@
   "version": "5",
   "specifiers": {
     "jsr:@std/assert@*": "1.0.15",
+    "jsr:@std/assert@1": "1.0.15",
     "jsr:@std/assert@1.0.15": "1.0.15",
+    "jsr:@std/async@^1.0.15": "1.0.15",
     "jsr:@std/internal@^1.0.10": "1.0.12",
     "jsr:@std/internal@^1.0.12": "1.0.12",
     "jsr:@std/path@*": "1.1.2",
@@ -10,6 +12,7 @@
     "npm:@testing-library/react@^16.3.0": "16.3.0_@testing-library+dom@10.4.1_@types+react@19.2.2_@types+react-dom@19.2.1__@types+react@19.2.2_react@19.2.0_react-dom@19.2.0__react@19.2.0",
     "npm:@types/node@*": "24.2.0",
     "npm:@types/react-dom@^19.1.9": "19.2.1_@types+react@19.2.2",
+    "npm:@types/react-dom@^19.2.0": "19.2.1_@types+react@19.2.2",
     "npm:@types/react@^19.1.13": "19.2.2",
     "npm:@types/react@^19.2.0": "19.2.2",
     "npm:@vitejs/plugin-react@^5.0.3": "5.0.4_vite@7.1.9__picomatch@4.0.3_@babel+core@7.28.4_@types+node@24.2.0",
@@ -29,6 +32,9 @@
       "dependencies": [
         "jsr:@std/internal@^1.0.12"
       ]
+    },
+    "@std/async@1.0.15": {
+      "integrity": "55d1d9d04f99403fe5730ab16bdcc3c47f658a6bf054cafb38a50f046238116e"
     },
     "@std/internal@1.0.12": {
       "integrity": "972a634fd5bc34b242024402972cd5143eac68d8dffaca5eaa4dba30ce17b027"
@@ -1113,6 +1119,7 @@
       "packages/react-mvvm": {
         "dependencies": [
           "jsr:@std/assert@1.0.15",
+          "jsr:@std/async@^1.0.15",
           "npm:@testing-library/react@^16.3.0",
           "npm:@types/react@^19.2.0",
           "npm:linkedom@~0.18.12",

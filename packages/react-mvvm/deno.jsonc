@@ -14,12 +14,13 @@
     }
   },
   "imports": {
-    "@testing-library/react": "npm:@testing-library/react@^16.3.0",
-    "@types/react": "npm:@types/react@^19.2.0",
-    "@std/assert": "jsr:@std/assert@1.0.15",
-    "linkedom": "npm:linkedom@^0.18.12",
-    "react": "npm:react@^19.2.0",
-    "react/jsx-runtime": "npm:react@^19.2.0/jsx-runtime",
-    "react-dom": "npm:react-dom@^19.2.0"
+    "@std/async": "jsr:@std/async@^1.0.15", // dev
+    "@testing-library/react": "npm:@testing-library/react@^16.3.0", // dev
+    "@types/react": "npm:@types/react@^19.2.0", // dev
+    "@std/assert": "jsr:@std/assert@1.0.15", // dev
+    "linkedom": "npm:linkedom@^0.18.12", // dev
+    "react": "npm:react@^19.2.0", // dev
+    "react/jsx-runtime": "npm:react@^19.2.0/jsx-runtime", // dev
+    "react-dom": "npm:react-dom@^19.2.0" // dev
   }
 }

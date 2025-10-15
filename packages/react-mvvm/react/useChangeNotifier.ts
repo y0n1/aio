@@ -59,7 +59,7 @@ export function useChangeNotifier<
       if (isFirstMount) {
         instance.removeListener(updateView);
       } else {
-        instance[Symbol.dispose]();
+        instance.dispose();
       }
     };
   }, []);
