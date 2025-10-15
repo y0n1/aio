@@ -1,0 +1,21 @@
+{
+  "name": "react-ioc",
+  "version": "1.0.0-rc.1",
+  "exports": "./mod.ts",
+  "tasks": {
+    "dev": "deno run --watch main.ts",
+    "test": "deno test"
+  },
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "lib": ["deno.ns", "dom"]
+  },
+  "imports": {
+    "@std/assert": "jsr:@std/assert@1", // dev
+    "@testing-library/react": "npm:@testing-library/react@^16.3.0", // dev
+    "@types/react": "npm:@types/react@^19.2.0", // dev
+    "@types/react-dom": "npm:@types/react-dom@^19.2.0", // dev
+    "react": "npm:react@^19.2.0", // dev
+    "react-dom": "npm:react-dom@^19.2.0" // dev
+  }
+}
