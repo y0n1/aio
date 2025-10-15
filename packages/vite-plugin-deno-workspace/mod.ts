@@ -192,8 +192,8 @@ function collectPackageAliases(
 
   // Extract the "workspace" array from the config, or use an empty array if not present
   const workspaceEntries = Array.isArray(
-    (workspaceConfig as { workspace?: unknown }).workspace,
-  )
+      (workspaceConfig as { workspace?: unknown }).workspace,
+    )
     ? ((workspaceConfig as { workspace: unknown[] }).workspace)
     : [];
 
@@ -395,7 +395,8 @@ function loadJson(filePath: string): unknown | undefined {
   } catch {
     // If that fails, try parsing after stripping comments (JSONC)
     try {
-      return JSON.parse(stripJsonComments(source));
+      const json = stripJsonComments(source);
+      return JSON.parse(json);
     } catch {
       return undefined;
     }
@@ -409,9 +410,75 @@ function loadJson(filePath: string): unknown | undefined {
  * @returns The source string with comments removed.
  */
 function stripJsonComments(source: string) {
-  return source
-    .replace(/\/\*[\s\S]*?\*\//g, "")
-    .replace(/^\s*\/\/.*$/gm, "");
+  let result = "";
+  let inString = false;
+  let inSingleLineComment = false;
+  let inMultiLineComment = false;
+  let isEscaped = false;
+
+  for (let i = 0; i < source.length; i++) {
+    const char = source[i];
+    const next = source[i + 1];
+
+    if (inSingleLineComment) {
+      if (char === "\n" || char === "\r") {
+        inSingleLineComment = false;
+        result += char;
+        if (char === "\r" && next === "\n") {
+          result += next;
+          i++;
+        }
+      }
+      continue;
+    }
+
+    if (inMultiLineComment) {
+      if (char === "\n") {
+        result += char;
+      } else if (char === "\r" && next === "\n") {
+        result += char + next;
+        i++;
+      }
+
+      if (char === "*" && next === "/") {
+        inMultiLineComment = false;
+        i++;
+      }
+      continue;
+    }
+
+    if (inString) {
+      result += char;
+      if (!isEscaped && char === '"') {
+        inString = false;
+      }
+      isEscaped = !isEscaped && char === "\\";
+      continue;
+    }
+
+    if (char === '"') {
+      inString = true;
+      result += char;
+      isEscaped = false;
+      continue;
+    }
+
+    if (char === "/" && next === "/") {
+      inSingleLineComment = true;
+      i++;
+      continue;
+    }
+
+    if (char === "/" && next === "*") {
+      inMultiLineComment = true;
+      i++;
+      continue;
+    }
+
+    result += char;
+  }
+
+  return result;
 }
 
 /**

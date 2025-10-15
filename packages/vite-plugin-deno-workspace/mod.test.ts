@@ -126,6 +126,54 @@ Deno.test("generates aliases for workspace packages", async () => {
   });
 });
 
+Deno.test("parses JSONC manifests that include comments", async () => {
+  await withTempDir(async (workspaceRoot) => {
+    const packagesDir = join(workspaceRoot, "packages");
+    const packageDir = join(packagesDir, "pkg-comments");
+
+    await writeTextFile(
+      join(workspaceRoot, "deno.jsonc"),
+      `{
+  // Top-level workspace comment
+  "workspace": [
+    "packages/*" // Inline workspace comment
+  ]
+}
+`,
+    );
+
+    await writeTextFile(
+      join(packageDir, "deno.jsonc"),
+      `{
+  /* Package manifest comment */
+  "name": "@tests/pkg-comments",
+  "exports": "./mod.ts",
+  "description": "Contains URL https://example.com/path"
+  // Trailing property comment
+}
+`,
+    );
+
+    await writeTextFile(
+      join(packageDir, "mod.ts"),
+      "export const value = 3;\n",
+    );
+
+    const warnings: string[] = [];
+
+    const result = await invokeConfigHook(warnings, {
+      root: workspaceRoot,
+    });
+
+    assertEquals(warnings.length, 0);
+    assertExists(result?.resolve);
+    const aliasMap = convertAliasToMap(
+      result?.resolve?.alias as AliasOptions | undefined,
+    );
+    assertEquals(aliasMap["@tests/pkg-comments"], join(packageDir, "mod.ts"));
+  });
+});
+
 Deno.test("merges generated aliases with existing configuration", async () => {
   await withTempDir(async (workspaceRoot) => {
     const packageDir = join(workspaceRoot, "packages", "pkg-b");
