@@ -6,7 +6,17 @@
     "lib": ["deno.ns", "ES2023"],
     "types": ["npm:vite/client"]
   },
+  "test": {
+    "include": [
+      "src/**/*.test.ts",
+      "tests/**/*.test.ts"
+    ],
+    "permissions": {
+      "read": true,
+      "write": true
+    }
+  },
   "imports": {
-    "vite": "npm:vite@^7.1.7"
+    "vite": "npm:vite@^7.1.7" // dev
   }
 }

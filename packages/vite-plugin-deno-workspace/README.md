@@ -5,10 +5,26 @@ declared in a Deno workspace. It discovers every package listed in
 `deno.json`/`deno.jsonc`, reads their exported entry point, and exposes it as a
 Vite alias automatically.
 
+## Project Layout
+
+The package follows a Go-inspired layout: the public surface sits at the root,
+while implementation details live inside `internal/` so they can evolve freely.
+
+- `plugin.ts` – public entry point exporting `denoWorkspacePlugin`
+- `internal/plugin.ts` – Vite hook implementation
+- `internal/vite/alias.ts` – alias merge helpers
+- `internal/workspace/*` – workspace discovery, package loading, exports parsing
+- `internal/config/json.ts` – JSON/JSONC utilities
+- `internal/types.ts` – shared internal types
+
+Tests live next to the code they cover (`internal/**/*.test.ts`) with
+integration coverage in `tests/mod.test.ts`. Shared test helpers remain in
+`tests/helpers.ts`.
+
 ## Usage
 
 ```ts
-// playground/config/vite.config.ts
+// vite.config.ts
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import denoWorkspacePlugin from "@y0n1/vite-plugin-deno-workspace";
