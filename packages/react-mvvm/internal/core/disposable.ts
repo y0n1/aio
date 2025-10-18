@@ -1,4 +1,4 @@
-export interface IDisposable extends Disposable {
+export interface IDisposable {
   dispose(): void;
   isDisposed: boolean;
 }

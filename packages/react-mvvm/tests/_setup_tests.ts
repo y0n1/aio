@@ -1,9 +1,9 @@
 /**
- * Setup the global environment for the tests that require a DOM.
+ * Setup the global environment for tests that require a DOM.
  *
  * @example
  * ```ts
- * import "./setup.ts";
+ * import "./_setup_tests.ts";
  * ```
  */
 

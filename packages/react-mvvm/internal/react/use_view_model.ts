@@ -10,7 +10,7 @@ import type { IDisposable } from "../core/disposable.ts";
  * A view-model is an object that implements the {@linkcode IListenable} and {@linkcode IDisposable} interfaces.
  * The easiest way to create a view-model is by extending the {@linkcode ChangeNotifier} class.
  * The view-model notifies the view about internal state changes by calling its {@linkcode IListenable.notifyListeners} method.
- * It disposes of resources when the component is unmounted by calling its {@linkcode IDisposable.dispose} method.
+ * Its {@linkcode IDisposable.dispose} method is called automatically when the component unmounts to dispose of resources.
  *
  * @template `TCtor` - The type of the view-model class constructor.
  * @param `ctor` - The view-model class constructor.
@@ -35,8 +35,12 @@ export function useViewModel<
     if (!newRef.hasListener(rerender)) {
       newRef.addListener(rerender);
     }
-    
-    // This is expected to happen, particularly, in React Strict Mode.
+
+    // React Strict Mode executes this effect in the following sequence: mount -> cleanup -> mount.
+    // During the first mount a view-model instance already exists, created by the first invocation of this hook.
+    // The second mount creates a new view-model instance due to the cleanup function being called.
+    // To ensure the view is updated with the new view-model instance, we only call rerender if the old reference is null.
+    // That indicates that the call to getCurrentRef must have returned a new instance.
     if (oldRef === null) {
       rerender();
     }
