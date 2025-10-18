@@ -1,16 +1,19 @@
 import { useEffect, useRef } from "react";
 import { useRerender } from "./use_rerender.ts";
+// deno-lint-ignore no-unused-vars
+import type { ChangeNotifier } from "../core/change_notifier.ts";
 import type { IListenable } from "../core/listenable.ts";
 import type { IDisposable } from "../core/disposable.ts";
 
 /**
  * Creates a singleton view-model instance that is persisted for the entire component's lifecycle.
  *
- * @remarks
+ * @description
  * A view-model is an object that implements the {@linkcode IListenable} and {@linkcode IDisposable} interfaces.
  * The easiest way to create a view-model is by extending the {@linkcode ChangeNotifier} class.
  * The view-model notifies the view about internal state changes by calling its {@linkcode IListenable.notifyListeners} method.
- * Its {@linkcode IDisposable.dispose} method is called automatically when the component unmounts to dispose of resources.
+ * **Change notifications have no effect on a component that is not mounted**.
+ * The {@linkcode IDisposable.dispose} method is called automatically when the component unmounts to dispose of resources.
  *
  * @template `TCtor` - The type of the view-model class constructor.
  * @param `ctor` - The view-model class constructor.

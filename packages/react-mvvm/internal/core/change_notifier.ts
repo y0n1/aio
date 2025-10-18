@@ -4,7 +4,7 @@ import { IDisposable } from "./disposable.ts";
 /**
  * ChangeNotifier provides a mechanism for notifying listeners when changes occur.
  *
- * @remarks
+ * @description
  * This class is intended to be used as a base for observable objects that need to notify subscribers
  * when changes occur. Listeners can be registered with optional configuration, such as one-time invocation.
  *
@@ -79,7 +79,7 @@ export class ChangeNotifier implements IListenable, IDisposable {
    * @param listener - The listener function to check for registration.
    * @returns {boolean} True if the listener is registered; otherwise, false.
    *
-   * @remarks
+   * @description
    * Use this method to determine whether a specific listener has already been registered.
    */
   hasListener(listener: VoidFunction): boolean {
@@ -89,7 +89,7 @@ export class ChangeNotifier implements IListenable, IDisposable {
   /**
    * Notifies all registered listeners of a change event.
    *
-   * @remarks
+   * @description
    * Each listener will be called. If a listener was registered with the `once` option, it will be removed after being notified.
    */
   notifyListeners(): void {
@@ -111,7 +111,7 @@ export class ChangeNotifier implements IListenable, IDisposable {
    * @param listener - The function to be called when a change event occurs.
    * @param options - Optional configuration for the listener. See {@linkcode IAddListenerOptions}.
    *
-   * @remarks
+   * @description
    * If the listener is already registered, the listener will be updated.
    */
   addListener(
@@ -129,7 +129,7 @@ export class ChangeNotifier implements IListenable, IDisposable {
    *
    * @param listener - The listener function to remove.
    *
-   * @remarks
+   * @description
    * If the listener is not registered, this method does nothing.
    */
   removeListener(listener: VoidFunction): void {
@@ -142,7 +142,7 @@ export class ChangeNotifier implements IListenable, IDisposable {
   /**
    * Disposes the ChangeNotifier, removing all listeners and preventing further notifications.
    *
-   * @remarks
+   * @description
    * Future calls to any method will do nothing.
    */
   dispose(): void {
