@@ -1,5 +1,5 @@
-import { IAddListenerOptions } from "./IListenable.ts";
-import { ChangeNotifier } from "./ChangeNotifier.ts";
+import { IAddListenerOptions } from "./listenable.ts";
+import { ChangeNotifier } from "./change_notifier.ts";
 
 /**
  * Observable provides a way to store a mutable value of type T and to observe changes to it.

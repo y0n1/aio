@@ -1,5 +1,5 @@
-import { IAddListenerOptions, IListenable } from "./IListenable.ts";
-import { IDisposable } from "./IDisposable.ts";
+import { IAddListenerOptions, IListenable } from "./listenable.ts";
+import { IDisposable } from "./disposable.ts";
 
 /**
  * ChangeNotifier provides a mechanism for notifying listeners when changes occur.
@@ -29,11 +29,14 @@ import { IDisposable } from "./IDisposable.ts";
  * @public
  */
 export class ChangeNotifier implements IListenable, IDisposable {
+  #instanceId: string = crypto.randomUUID();
+
   /**
    * Internal map of listeners and their associated options.
    * @private
    */
   #listeners: Map<VoidFunction, IAddListenerOptions | undefined>;
+
   /**
    * Indicates whether this ChangeNotifier has been disposed.
    * @private
@@ -46,6 +49,10 @@ export class ChangeNotifier implements IListenable, IDisposable {
   constructor() {
     this.#listeners = new Map();
     this.#isDisposed = false;
+  }
+
+  get instanceId(): string {
+    return this.#instanceId;
   }
 
   /**

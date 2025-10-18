@@ -1,4 +1,4 @@
-import { ChangeNotifier } from "../../core/ChangeNotifier.ts";
+import { ChangeNotifier } from "../../internal/core/change_notifier.ts";
 
 export class CounterNotifier extends ChangeNotifier {
   #count: number;

@@ -1,24 +1,22 @@
-import { assert, assertStrictEquals } from "@std/assert";
-import { Results } from "../core/Result.ts";
+import "./_setup_tests.ts";
+import { assert, assertEquals } from "@std/assert";
+import { type Result, Results } from "../internal/core/result.ts";
 
-Deno.test("Results.OK returns a frozen success result with the value", () => {
-  const payload = { id: 123 };
+const divide = (a: number, b: number): Result<number, Error> => {
+  if (b === 0) {
+    return Results.Failure(new Error("Division by zero"));
+  }
+  return Results.Success(a / b);
+};
 
-  const result = Results.OK(payload);
-
-  assert(Object.isFrozen(result));
-  assertStrictEquals(result.type, "success");
-  assertStrictEquals(result.value, payload);
-  assert(!("error" in result));
+Deno.test("divide returns a successful result when the division is successful", () => {
+  const result = divide(10, 2);
+  assert(result.ok);
+  assertEquals(result.value, 5);
 });
 
-Deno.test("Results.Error returns a frozen failure result with the error", () => {
-  const failure = new Error("fail");
-
-  const result = Results.Error(failure);
-
-  assert(Object.isFrozen(result));
-  assertStrictEquals(result.type, "failure");
-  assertStrictEquals(result.error, failure);
-  assert(!("value" in result));
+Deno.test("divide returns a failed result when the division is not successful", () => {
+  const result = divide(10, 0);
+  assert(!result.ok);
+  assertEquals(result.error.message, "Division by zero");
 });
