@@ -57,6 +57,19 @@ Deno.test(
   },
 );
 
+Deno.test("hasListener reflects listener registration state", () => {
+  const notifier = new ChangeNotifier();
+  const listener = () => {};
+
+  assertEquals(notifier.hasListener(listener), false);
+
+  notifier.addListener(listener);
+  assertEquals(notifier.hasListener(listener), true);
+
+  notifier.removeListener(listener);
+  assertEquals(notifier.hasListener(listener), false);
+});
+
 Deno.test("[Symbol.dispose] clears listeners and prevents further notifications", () => {
   const notifier = new ChangeNotifier();
   let callCount = 0;

@@ -74,6 +74,19 @@ export class ChangeNotifier implements IListenable, IDisposable {
   }
 
   /**
+   * Checks if a specific listener is currently registered.
+   *
+   * @param listener - The listener function to check for registration.
+   * @returns {boolean} True if the listener is registered; otherwise, false.
+   *
+   * @remarks
+   * Use this method to determine whether a specific listener has already been registered.
+   */
+  hasListener(listener: VoidFunction): boolean {
+    return this.#listeners.has(listener);
+  }
+
+  /**
    * Notifies all registered listeners of a change event.
    *
    * @remarks

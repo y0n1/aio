@@ -4,18 +4,18 @@ import type { IListenable } from "../core/listenable.ts";
 import type { IDisposable } from "../core/disposable.ts";
 
 /**
- * Creates a view-model instance tied to a React component lifecycle.
+ * Creates a singleton view-model instance that is persisted for the entire component's lifecycle.
  *
  * @remarks
  * A view-model is an object that implements the {@linkcode IListenable} and {@linkcode IDisposable} interfaces.
- * The easies way to create a view-model is to extend the {@linkcode ChangeNotifier} class.
- * The view-model can notify the view about internal state changes by calling its {@linkcode IListenable.notifyListeners} method.
- * Its {@linkcode IDisposable.dispose} method is called to dispose of resources when the component is unmounted.
+ * The easiest way to create a view-model is by extending the {@linkcode ChangeNotifier} class.
+ * The view-model notifies the view about internal state changes by calling its {@linkcode IListenable.notifyListeners} method.
+ * It disposes of resources when the component is unmounted by calling its {@linkcode IDisposable.dispose} method.
  *
- * @template TCtor The type of the view-model class constructor.
- * @param ctor - The view-model class constructor.
- * @param args - The arguments to pass to the view-model constructor.
- * @returns The view-model instance (persisted across rerenders).
+ * @template `TCtor` - The type of the view-model class constructor.
+ * @param `ctor` - The view-model class constructor.
+ * @param `args` - The arguments to pass to the view-model constructor.
+ * @returns The view-model instance.
  */
 export function useViewModel<
   TCtor extends new (
@@ -26,24 +26,41 @@ export function useViewModel<
   ...args: ConstructorParameters<TCtor>
 ): InstanceType<TCtor> {
   const rerender = useRerender();
-  const ref = useRef(new ctor(...args) as InstanceType<TCtor>);
+  const ref = useRef<InstanceType<TCtor>>(null);
 
   useEffect(() => {
-    // If the view-model is disposed, create a new instance and rerender.
+    const oldRef = ref.current;
+    const newRef = getCurrentRef(ctor, args, ref);
+
+    if (!newRef.hasListener(rerender)) {
+      newRef.addListener(rerender);
+    }
+    
     // This is expected to happen, particularly, in React Strict Mode.
-    if (ref.current.isDisposed) {
-      ref.current = new ctor(...args) as InstanceType<TCtor>;
+    if (oldRef === null) {
       rerender();
     }
 
-    if (!ref.current.hasListeners) {
-      ref.current.addListener(rerender);
-    }
-
     return () => {
-      ref.current.dispose();
+      newRef.dispose();
+      ref.current = null;
     };
   }, []);
 
-  return ref.current;
+  return getCurrentRef(ctor, args, ref);
 }
+
+const getCurrentRef = <
+  TCtor extends new (
+    ...args: ConstructorParameters<TCtor>
+  ) => IListenable & IDisposable,
+>(
+  ctor: TCtor,
+  args: ConstructorParameters<TCtor>,
+  ref: React.RefObject<InstanceType<TCtor> | null>,
+): InstanceType<TCtor> => {
+  if (ref.current === null) {
+    ref.current = new ctor(...args) as InstanceType<TCtor>;
+  }
+  return ref.current;
+};
