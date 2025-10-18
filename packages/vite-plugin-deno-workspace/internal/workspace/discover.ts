@@ -1,7 +1,7 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 
-import type { DenoWorkspacePluginOptions } from "../../types.ts";
+import type { DenoWorkspacePluginOptions } from "../types.ts";
 
 /**
  * Resolves the path to the workspace configuration file.

@@ -1,7 +1,7 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 
-import type { AliasEntries, LoggerLike } from "../../types.ts";
+import type { AliasEntries, LoggerLike } from "../types.ts";
 import { loadJson } from "../config/json.ts";
 import { tryStat } from "./discover.ts";
 import { resolveExportsField } from "./exports.ts";

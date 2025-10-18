@@ -1,6 +1,6 @@
 import type { Alias, AliasOptions } from "vite";
 
-import type { AliasEntries } from "../../types.ts";
+import type { AliasEntries } from "../types.ts";
 
 /**
  * Merges existing Vite aliases with new workspace package aliases.
