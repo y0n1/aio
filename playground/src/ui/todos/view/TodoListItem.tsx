@@ -1,5 +1,5 @@
 import { css, cx } from "@emotion/css";
-import type { Todo } from "../models/Todo.ts";
+import type { Todo } from "../../../domain/models/Todo.ts";
 import { TodoListButton } from "./TodoListButton.tsx";
 
 const itemStyles = css`
@@ -34,8 +34,8 @@ const completedStyles = css`
 
 type TodoListItemProps = {
   todo: Todo;
-  onToggle: (id: number) => void;
-  onRemove: (id: number) => void;
+  onToggle: (id: string) => void;
+  onRemove: (id: string) => void;
 };
 
 export const TodoListItem = (

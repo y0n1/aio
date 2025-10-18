@@ -1,8 +1,7 @@
 import { useMemo, useState } from "react";
-import { Todo } from "./models/Todo.ts";
-import { TodoListView } from "./view/TodoListView.tsx";
+import { Todo } from "../../../domain/models/Todo.ts";
 
-export const useTodoListViewModel = () => {
+export const useTodoListClassicViewModel = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [draft, setDraft] = useState("");
 
@@ -23,12 +22,12 @@ export const useTodoListViewModel = () => {
 
     setTodos((current) => [
       ...current,
-      new Todo(Date.now(), value, false),
+      new Todo(crypto.randomUUID(), value, false),
     ]);
     setDraft("");
   };
 
-  const toggleTodo = (id: number) => {
+  const toggleTodo = (id: string) => {
     setTodos((current) =>
       current.map((todo) =>
         todo.id === id ? new Todo(todo.id, todo.text, !todo.completed) : todo
@@ -36,7 +35,7 @@ export const useTodoListViewModel = () => {
     );
   };
 
-  const removeTodo = (id: number) => {
+  const removeTodo = (id: string) => {
     setTodos((current) => current.filter((todo) => todo.id !== id));
   };
 
@@ -54,20 +53,3 @@ export const useTodoListViewModel = () => {
     handleDraftChange,
   };
 };
-
-export const TodoListClassic = (): React.ReactNode => {
-  const vm = useTodoListViewModel();
-
-  return (
-    <TodoListView
-      counters={vm.counts}
-      draft={vm.draft}
-      onDraftChange={vm.handleDraftChange}
-      todos={vm.todos}
-      onAdd={vm.addTodo}
-      onToggle={vm.toggleTodo}
-      onRemove={vm.removeTodo}
-    />
-  );
-};
-TodoListClassic.displayName = "TodoListClassic";

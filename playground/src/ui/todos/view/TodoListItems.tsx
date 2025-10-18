@@ -1,5 +1,5 @@
 import { css } from "@emotion/css";
-import type { Todo } from "../models/Todo.ts";
+import type { Todo } from "../../../domain/models/Todo.ts";
 import { TodoListItem } from "./TodoListItem.tsx";
 
 const styles = css`
@@ -16,8 +16,8 @@ const styles = css`
 
 type TodoListItemsProps = {
   todos: Readonly<Todo[]>;
-  onToggle: (id: number) => void;
-  onRemove: (id: number) => void;
+  onToggle: (id: string) => void;
+  onRemove: (id: string) => void;
 };
 
 export const TodoListItems = (

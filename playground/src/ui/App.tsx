@@ -1,5 +1,5 @@
 import { css } from "@emotion/css";
-import { TodoListMvvm } from "./components/todos/TodoListMvvm.tsx";
+import { TodoListMvvm } from "./todos/view/TodoListMvvm.tsx";
 
 const styles = css`
   min-height: 24rem;
@@ -16,7 +16,7 @@ const styles = css`
 export default function App(): React.ReactNode {
   return (
     <div className={styles}>
-      <h1>Hello playground!</h1>
+      <h1>MVVM Playground</h1>
 
       <TodoListMvvm />
     </div>

@@ -1,14 +1,15 @@
 import { css } from "@emotion/css";
-import type { Todo } from "../models/Todo.ts";
-import type { TodoCounters } from "../models/TodoCounters.ts";
 import { TodoListHeader } from "./TodoListHeader.tsx";
 import { TodoListForm } from "./TodoListForm.tsx";
 import { TodoListEmptyState } from "./TodoListEmptyState.tsx";
 import { TodoListItems } from "./TodoListItems.tsx";
+import type { TodoCounters } from "../../../domain/models/TodoCounters.ts";
+import type { Todo } from "../../../domain/models/Todo.ts";
 
 const styles = css`
   width: 100%;
   max-width: 30rem;
+  min-width: 20rem;
   max-height: calc(100% - 8rem);
   min-height: 16rem;
   display: flex;
@@ -27,8 +28,8 @@ interface TodoListViewProps {
   onDraftChange: (value: string) => void;
   todos: Readonly<Todo[]>;
   onAdd: () => void;
-  onRemove: (id: number) => void;
-  onToggle: (id: number) => void;
+  onRemove: (id: string) => void;
+  onToggle: (id: string) => void;
 }
 
 export const TodoListView = (
