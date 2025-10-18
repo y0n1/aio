@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import type { Container } from "../core/Container.ts";
+import type { Container } from "../core/container.ts";
 
 export const DependencyInjectionContext = createContext<Container | null>(null);
 

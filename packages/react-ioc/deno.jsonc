@@ -1,5 +1,5 @@
 {
-  "name": "react-ioc",
+  "name": "@y0n1/react-ioc",
   "version": "1.0.0-rc.1",
   "exports": "./mod.ts",
   "tasks": {
