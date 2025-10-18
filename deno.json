@@ -1,0 +1,11 @@
+{
+  "fmt": {
+    "indentWidth": 2,
+    "useTabs": false
+  },
+  "nodeModulesDir": "auto",
+  "workspace": [
+    "packages/*",
+    "playground"
+  ]
+}
