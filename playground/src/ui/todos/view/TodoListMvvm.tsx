@@ -1,9 +1,9 @@
-import { useChangeNotifier } from "@y0n1/react-mvvm";
+import { useViewModel } from "@y0n1/react-mvvm";
 import { TodoListView } from "./TodoListView.tsx";
 import { TodoListViewModel } from "../view-models/TodoListViewModel.ts";
 
 export const TodoListMvvm = (): React.ReactNode => {
-  const vm = useChangeNotifier(TodoListViewModel, "Let's write todos!");
+  const vm = useViewModel(TodoListViewModel, "Let's write todos!");
 
   return (
     <TodoListView

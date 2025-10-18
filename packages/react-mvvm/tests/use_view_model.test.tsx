@@ -1,18 +1,18 @@
 import "./_setup_tests.ts";
 import {
-assert,
+  assert,
   assertEquals,
   assertNotStrictEquals,
   assertStrictEquals,
 } from "@std/assert";
 import { act, renderHook } from "@testing-library/react";
 import { ChangeNotifier } from "../internal/core/change_notifier.ts";
-import { useChangeNotifier } from "../internal/react/use_change_notifier.ts";
+import { useViewModel } from "../internal/react/use_view_model.ts";
 import { CounterNotifier } from "./fixtures/counter.ts";
 
 Deno.test("useChangeNotifier returns a non-disposed instance", () => {
   const { result } = renderHook(
-    () => useChangeNotifier(CounterNotifier),
+    () => useViewModel(CounterNotifier),
     { reactStrictMode: true },
   );
 
@@ -21,7 +21,7 @@ Deno.test("useChangeNotifier returns a non-disposed instance", () => {
 
 Deno.test("useChangeNotifier disposes the notifier when the component unmounts", () => {
   const { result, unmount } = renderHook(
-    () => useChangeNotifier(CounterNotifier),
+    () => useViewModel(CounterNotifier),
     { reactStrictMode: true },
   );
 
@@ -31,10 +31,9 @@ Deno.test("useChangeNotifier disposes the notifier when the component unmounts",
 });
 
 Deno.test("useChangeNotifier removes listeners when the component unmounts", () => {
-  const { result, unmount } = renderHook(() =>
-    useChangeNotifier(CounterNotifier),
-    { reactStrictMode: true },
-  );
+  const { result, unmount } = renderHook(() => useViewModel(CounterNotifier), {
+    reactStrictMode: true,
+  });
   const notifier = result.current;
 
   unmount();
@@ -47,7 +46,7 @@ Deno.test("useChangeNotifier re-renders when the notifier dispatches", () => {
 
   const { result, unmount } = renderHook(() => {
     renderCount += 1;
-    return useChangeNotifier(CounterNotifier);
+    return useViewModel(CounterNotifier);
   }, { reactStrictMode: true });
 
   const notifier = result.current;
@@ -66,7 +65,7 @@ Deno.test("useChangeNotifier re-renders when the notifier dispatches", () => {
 
 Deno.test("useChangeNotifier returns the same instance after multiple renders", () => {
   const { result, rerender } = renderHook(
-    () => useChangeNotifier(CounterNotifier),
+    () => useViewModel(CounterNotifier),
     { reactStrictMode: true },
   );
 
@@ -79,7 +78,7 @@ Deno.test("useChangeNotifier returns the same instance after multiple renders", 
 
 Deno.test("useChangeNotifier returns a new instance after unmounting", () => {
   const { result, unmount } = renderHook(
-    () => useChangeNotifier(CounterNotifier),
+    () => useViewModel(CounterNotifier),
     { reactStrictMode: true },
   );
   const firstInstance = result.current;
@@ -89,7 +88,7 @@ Deno.test("useChangeNotifier returns a new instance after unmounting", () => {
   assertEquals(firstInstance.hasListeners, false);
 
   const { result: nextRender } = renderHook(() =>
-    useChangeNotifier(CounterNotifier)
+    useViewModel(CounterNotifier)
   );
   const secondInstance = nextRender.current;
 
@@ -104,7 +103,7 @@ Deno.test("useChangeNotifier forwards constructor arguments to the notifier", ()
   }
 
   const { result } = renderHook(
-    () => useChangeNotifier(ParameterizedNotifier, 42, "counter"),
+    () => useViewModel(ParameterizedNotifier, 42, "counter"),
     { reactStrictMode: true },
   );
 

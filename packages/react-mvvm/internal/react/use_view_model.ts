@@ -1,11 +1,12 @@
 import { useEffect, useRef } from "react";
-import type { ChangeNotifier } from "../core/change_notifier.ts";
 import { useRerender } from "@y0n1/react-hooks";
+import type { IListenable } from "../core/listenable.ts";
+import type { IDisposable } from "../core/disposable.ts";
 
-export function useChangeNotifier<
+export function useViewModel<
   TCtor extends new (
     ...args: ConstructorParameters<TCtor>
-  ) => ChangeNotifier,
+  ) => IListenable & IDisposable,
 >(
   ctor: TCtor,
   ...args: ConstructorParameters<TCtor>
