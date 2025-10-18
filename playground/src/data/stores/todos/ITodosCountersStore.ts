@@ -1,4 +1,4 @@
-export interface ITodoCountersStore {
+export interface ITodosCountersStore {
   get total(): number;
   get completed(): number;
   get remaining(): number;

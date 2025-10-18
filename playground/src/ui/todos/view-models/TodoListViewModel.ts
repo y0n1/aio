@@ -1,6 +1,8 @@
 import { ChangeNotifier } from "@y0n1/react-mvvm";
 import { Todo } from "../../../domain/models/Todo.ts";
 import type { TodoCounters } from "../../../domain/models/TodoCounters.ts";
+import type { ITodosCountersStore } from "../../../data/stores/todos/ITodosCountersStore.ts";
+import type { ITodosStore } from "../../../data/stores/todos/ITodosStore.ts";
 
 export class TodoListViewModel extends ChangeNotifier {
   #draft: string;
@@ -8,14 +10,33 @@ export class TodoListViewModel extends ChangeNotifier {
     return this.#draft;
   }
 
-  #todos: Todo[];
+  #todosStore: ITodosStore;
   get todos(): Todo[] {
-    return this.#todos;
+    return this.#todosStore.todos;
   }
 
-  #counters: TodoCounters;
+  #countersStore: ITodosCountersStore;
   get counters(): TodoCounters {
-    return this.#counters;
+    return {
+      completed: this.#countersStore.completed,
+      total: this.#countersStore.total,
+    };
+  }
+
+  constructor(
+    draft = "",
+    todosStore: ITodosStore,
+    countersStore: ITodosCountersStore,
+  ) {
+    super();
+    this.#draft = draft;
+    this.#todosStore = todosStore;
+    this.#countersStore = countersStore;
+
+    this.addTodo = this.addTodo.bind(this);
+    this.toggleTodo = this.toggleTodo.bind(this);
+    this.removeTodo = this.removeTodo.bind(this);
+    this.draftChange = this.draftChange.bind(this);
   }
 
   addTodo(): void {
@@ -24,52 +45,41 @@ export class TodoListViewModel extends ChangeNotifier {
       return;
     }
 
-    const todo = new Todo(crypto.randomUUID(), value, false);
-    this.#todos.push(todo);
-    this.#counters.total += 1;
+    this.#todosStore.add(new Todo(crypto.randomUUID(), value, false));
+    this.#countersStore.incrementTotal();
     this.#draft = "";
-
-    this.#todos = [...this.#todos];
-    this.#counters = { ...this.#counters };
 
     this.notifyListeners();
   }
 
   removeTodo(id: string): void {
-    const todoIndex = this.#todos.findIndex((todo) => todo.id === id);
-    if (todoIndex === -1) {
+    const result = this.#todosStore.find(id);
+    if (!result.ok) {
+      console.warn(result.error);
       return;
     }
-
-    const todo = this.#todos[todoIndex];
+    const todo = result.value!;
+    this.#countersStore.decrementTotal();
     if (todo.completed) {
-      this.#counters.completed -= 1;
+      this.#countersStore.decrementCompleted();
     }
-    this.#counters.total -= 1;
-    this.#todos.splice(todoIndex, 1);
-
-    this.#counters = { ...this.#counters };
-    this.#todos = [...this.#todos];
+    this.#todosStore.remove(id);
 
     this.notifyListeners();
   }
 
   toggleTodo(id: string): void {
-    const todoIndex = this.#todos.findIndex((todo) => todo.id === id);
-    if (todoIndex === -1) {
+    const result = this.#todosStore.toggle(id);
+    if (!result.ok) {
+      console.warn(result.error);
       return;
     }
-
-    const todo = this.#todos[todoIndex];
-    todo.toggle();
+    const todo = result.value!;
     if (todo.completed) {
-      this.#counters.completed += 1;
+      this.#countersStore.incrementCompleted();
     } else {
-      this.#counters.completed -= 1;
+      this.#countersStore.decrementCompleted();
     }
-
-    this.#counters = { ...this.#counters };
-    this.#todos = [...this.#todos];
 
     this.notifyListeners();
   }
@@ -77,20 +87,6 @@ export class TodoListViewModel extends ChangeNotifier {
   draftChange(value: string): void {
     this.#draft = value;
     this.notifyListeners();
-  }
-
-  constructor(
-    draft = "",
-  ) {
-    super();
-    this.#draft = draft;
-    this.#todos = [];
-    this.#counters = { completed: 0, total: 0 };
-
-    this.addTodo = this.addTodo.bind(this);
-    this.toggleTodo = this.toggleTodo.bind(this);
-    this.removeTodo = this.removeTodo.bind(this);
-    this.draftChange = this.draftChange.bind(this);
   }
 
   override dispose(): void {
