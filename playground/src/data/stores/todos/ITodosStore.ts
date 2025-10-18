@@ -1,4 +1,4 @@
-import type { Todo } from "../../../models/Todo.ts";
+import type { Todo } from "../../../domain/models/Todo.ts";
 
 export interface ITodosStore {
   todos: Todo[];
