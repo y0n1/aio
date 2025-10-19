@@ -5,9 +5,19 @@ import path from "node:path";
 
 // https://vite.dev/config/
 export default defineConfig({
+  resolve: {
+    alias: {
+      "@y0n1/react-mvvm": path.resolve(
+        "..",
+        "packages",
+        "react-mvvm",
+        "mod.ts",
+      ),
+    },
+  },
   plugins: [
     denoWorkspace({
-      workspacePath: path.resolve("..", "deno.json"),
+      workspacePath: path.resolve("..", "deno.jsonc"),
     }),
     react({
       babel: {

@@ -11,8 +11,8 @@
   },
   "imports": {
     "@emotion/css": "npm:@emotion/css@^11.13.5",
-    "@types/react": "npm:@types/react@^19.1.13",
-    "@types/react-dom": "npm:@types/react-dom@^19.1.9",
+    "@types/react": "npm:@types/react@^19.2.0",
+    "@types/react-dom": "npm:@types/react-dom@^19.2.0",
     "@vitejs/plugin-react": "npm:@vitejs/plugin-react@^5.0.3",
     "@y0n1/react-mvvm": "../packages/react-mvvm/mod.ts",
     "@y0n1/vite-plugin-deno-workspace": "../packages/vite-plugin-deno-workspace/mod.ts",
