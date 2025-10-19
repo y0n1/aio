@@ -1,7 +1,7 @@
 {
-    "recommendations": [
-        "styled-components.vscode-styled-components",
-        "dbaeumer.vscode-eslint",
-        "denoland.vscode-deno"
-    ]
+  "recommendations": [
+    "styled-components.vscode-styled-components",
+    "dbaeumer.vscode-eslint",
+    "denoland.vscode-deno"
+  ]
 }

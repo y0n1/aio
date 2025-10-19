@@ -6,10 +6,7 @@ import type { AliasOptions, Plugin } from "vite";
 import { mergeAliases } from "./vite/alias.ts";
 import { collectPackageAliases } from "./workspace/packages.ts";
 import { resolveWorkspaceConfigPath } from "./workspace/discover.ts";
-import type {
-  DenoWorkspacePluginOptions,
-  LoggerLike,
-} from "./types.ts";
+import type { DenoWorkspacePluginOptions, LoggerLike } from "./types.ts";
 
 /**
  * Vite plugin for automatically inferring and configuring workspace-based path aliases
