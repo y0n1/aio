@@ -1,15 +1,18 @@
 {
-  "deno.enable": true,
-  "deno.codeLens.test": true,
-  "deno.lint": true,
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
-  "editor.defaultFormatter": "denoland.vscode-deno",
   "files.autoSave": "afterDelay",
   "[jsonc]": {
     "editor.defaultFormatter": "denoland.vscode-deno"
   },
   "[typescript]": {
     "editor.defaultFormatter": "denoland.vscode-deno"
-  }
+  },
+  "deno.codeLens.implementations": true,
+  "deno.codeLens.references": true,
+  "deno.codeLens.referencesAllFunctions": true,
+  "deno.codeLens.test": true,
+  "deno.lint": true,
+  "deno.maxTsServerMemory": 4096,
+  "deno.enable": true
 }

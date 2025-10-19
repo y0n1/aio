@@ -1,4 +1,9 @@
 {
+  "tasks": {
+    "format": "deno fmt --check",
+    "lint": "deno lint",
+    "test": "deno test -A"
+  },
   "fmt": {
     "indentWidth": 2,
     "useTabs": false

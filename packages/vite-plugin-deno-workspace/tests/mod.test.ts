@@ -1,5 +1,5 @@
-import { assert, assertEquals, assertExists } from "jsr:@std/assert";
-import { join } from "jsr:@std/path";
+import { assert, assertEquals, assertExists } from "@std/assert";
+import { join } from "@std/path";
 
 import {
   convertAliasToMap,

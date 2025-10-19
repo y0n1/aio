@@ -11,7 +11,6 @@ const styles = css`
   list-style: none;
   max-height: 16rem;
   overflow-y: auto;
-
 `;
 
 type TodoListItemsProps = {

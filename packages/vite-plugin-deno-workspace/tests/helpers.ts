@@ -1,4 +1,4 @@
-import { dirname } from "jsr:@std/path";
+import { dirname } from "@std/path";
 
 import type {
   AliasOptions,

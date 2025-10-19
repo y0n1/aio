@@ -37,7 +37,7 @@ export class TodosStoreLocal implements ITodosStore {
   }
 
   find(id: Todo["id"]): Result<Todo, Error> {
-    const todo =this.#todos.find((todo) => todo.id === id);
+    const todo = this.#todos.find((todo) => todo.id === id);
     if (!todo) {
       return Results.Failure(new Error(`Todo with id ${id} not found`));
     }
