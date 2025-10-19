@@ -15,7 +15,6 @@
     "@types/react-dom": "npm:@types/react-dom@^19.2.0",
     "@vitejs/plugin-react": "npm:@vitejs/plugin-react@^5.0.3",
     "@y0n1/react-mvvm": "../packages/react-mvvm/mod.ts",
-    "@y0n1/vite-plugin-deno-workspace": "../packages/vite-plugin-deno-workspace/mod.ts",
     "babel-plugin-react-compiler": "npm:babel-plugin-react-compiler@^1.0.0",
     "react": "npm:react@^19.2.0",
     "react/jsx-runtime": "npm:react/jsx-runtime",
