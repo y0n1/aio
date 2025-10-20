@@ -40,7 +40,7 @@ const releaseVersion = match?.groups?.version?.trim();
 
 if (!packageName || !releaseVersion) {
   fail(
-    "Release title must follow the '[package_name]/v<package_version>' format.",
+    "Release title must follow the '<package_name>/v<package_version>' format (e.g. 'react-mvvm/v1.0.0').",
   );
 }
 
