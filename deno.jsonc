@@ -4,6 +4,10 @@
     "lint": "deno lint",
     "test": "deno test -A"
   },
+  "imports": {
+    "@std/jsonc": "jsr:@std/jsonc@^1.0.2",
+    "@std/path": "jsr:@std/path@^1.1.2"
+  },
   "fmt": {
     "indentWidth": 2,
     "useTabs": false
