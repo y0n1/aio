@@ -49,7 +49,6 @@ export class ChangeNotifier implements IListenable, IDisposable, Disposable {
   constructor() {
     this.#listeners = new Map();
     this.#isDisposed = false;
-    Object.seal(this);
   }
 
   get instanceId(): string {
