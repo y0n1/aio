@@ -47,4 +47,4 @@ jobs:
 
       - name: Publish to JSR
         working-directory: ${{ needs.resolve-package.outputs.package_dir }}
-        run: npx jsr publish --dry-run
+        run: npx jsr publish
