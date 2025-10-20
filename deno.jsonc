@@ -1,8 +1,10 @@
 {
   "tasks": {
     "format": "deno fmt --check",
+    "format:fix": "deno fmt",
     "lint": "deno lint",
-    "test": "deno test -A"
+    "test": "deno test -P",
+    "test-actions:pr_checks": "act pull_request --artifact-server-path ./artifacts"
   },
   "imports": {
     "@std/jsonc": "jsr:@std/jsonc@^1.0.2",
