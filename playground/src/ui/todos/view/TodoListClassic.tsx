@@ -1,5 +1,5 @@
 import { TodoListView } from "./TodoListView.tsx";
-import { useTodoListClassicViewModel } from "../view-models/useTodoListViewModel.ts";
+import { useTodoListClassicViewModel } from "../components/useTodoListViewModel.ts";
 
 export const TodoListClassic = (): React.ReactNode => {
   const vm = useTodoListClassicViewModel();

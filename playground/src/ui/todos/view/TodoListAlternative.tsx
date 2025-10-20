@@ -5,7 +5,8 @@ import { TodosCountersStore } from "../../../data/stores/todos/TodosCountersStor
 import { TodosStoreLocal } from "../../../data/stores/todos/TodosStoreLocal.ts";
 import { useMemo } from "react";
 
-export const TodoListMvvm = (): React.ReactNode => {
+export const TodoListAlternative = (): React.ReactNode => {
+  // These could be injected using a DI container like InversifyJS (or @y0n1/react-ioc ;-P)
   const todosStore = useMemo(() => new TodosStoreLocal(), []);
   const countersStore = useMemo(() => new TodosCountersStore(), []);
   const vm = useViewModel(
@@ -15,16 +16,6 @@ export const TodoListMvvm = (): React.ReactNode => {
     countersStore,
   );
 
-  return (
-    <TodoListView
-      todos={vm.todos}
-      onAdd={vm.addTodo}
-      onRemove={vm.removeTodo}
-      onToggle={vm.toggleTodo}
-      draft={vm.draft}
-      onDraftChange={vm.draftChange}
-      counters={vm.counters}
-    />
-  );
+  return <TodoListView viewModel={vm} />;
 };
-TodoListMvvm.displayName = "TodoListMvvm";
+TodoListAlternative.displayName = "TodoListAlternative";
