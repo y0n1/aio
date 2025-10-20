@@ -28,13 +28,13 @@ const styles = css`
 export const TodoList = (): React.ReactNode => {
   const todosStore = useMemo(() => new TodosStoreLocal(), []);
   const countersStore = useMemo(() => new TodosCountersStore(), []);
-  const viewModel= useViewModel(
+  const viewModel = useViewModel(
     TodoListViewModel,
     "Let's write todos!",
     todosStore,
     countersStore,
   );
-  
+
   return (
     <section className={styles} aria-label="todo list">
       <TodoListHeader counters={viewModel.counters} />
