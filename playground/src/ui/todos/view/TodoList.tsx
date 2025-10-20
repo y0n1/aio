@@ -1,10 +1,13 @@
+import { useMemo } from "react";
 import { css } from "@emotion/css";
-import { useListenable } from "@y0n1/react-mvvm";
+import { useViewModel } from "@y0n1/react-mvvm";
 import { TodoListHeader } from "./TodoListHeader.tsx";
 import { TodoListForm } from "./TodoListForm.tsx";
 import { TodoListEmptyState } from "./TodoListEmptyState.tsx";
 import { TodoListItems } from "./TodoListItems.tsx";
-import type { TodoListViewModel } from "../view-models/TodoListViewModel.ts";
+import { TodoListViewModel } from "../view-models/TodoListViewModel.ts";
+import { TodosCountersStore } from "../../../data/stores/todos/TodosCountersStore.ts";
+import { TodosStoreLocal } from "../../../data/stores/todos/TodosStoreLocal.ts";
 
 const styles = css`
   width: 100%;
@@ -22,14 +25,16 @@ const styles = css`
   color: #f4f6ff;
 `;
 
-interface TodoListViewProps {
-  viewModel: TodoListViewModel;
-}
-
-export const TodoListView = (
-  { viewModel }: TodoListViewProps,
-): React.ReactNode => {
-  useListenable(viewModel);
+export const TodoList = (): React.ReactNode => {
+  const todosStore = useMemo(() => new TodosStoreLocal(), []);
+  const countersStore = useMemo(() => new TodosCountersStore(), []);
+  const viewModel= useViewModel(
+    TodoListViewModel,
+    "Let's write todos!",
+    todosStore,
+    countersStore,
+  );
+  
   return (
     <section className={styles} aria-label="todo list">
       <TodoListHeader counters={viewModel.counters} />
@@ -48,4 +53,4 @@ export const TodoListView = (
     </section>
   );
 };
-TodoListView.displayName = "TodoListView";
+TodoList.displayName = "TodoList";
