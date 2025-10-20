@@ -97,8 +97,20 @@ Deno.test("useViewModel returns a new instance after unmounting", () => {
 
 Deno.test("useViewModel forwards constructor arguments to the view-model", () => {
   class ParameterizedNotifier extends ChangeNotifier {
-    constructor(readonly initialValue: number, readonly label: string) {
+    #initialValue: number;
+    get initialValue(): number {
+      return this.#initialValue;
+    }
+
+    #label: string;
+    get label(): string {
+      return this.#label;
+    }
+
+    constructor(initialValue: number, label: string) {
       super();
+      this.#initialValue = initialValue;
+      this.#label = label;
     }
   }
 

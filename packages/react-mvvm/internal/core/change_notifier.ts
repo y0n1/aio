@@ -28,7 +28,7 @@ import { IDisposable } from "./disposable.ts";
  *
  * @public
  */
-export class ChangeNotifier implements IListenable, IDisposable {
+export class ChangeNotifier implements IListenable, IDisposable, Disposable {
   #instanceId: string = crypto.randomUUID();
 
   /**
@@ -49,6 +49,7 @@ export class ChangeNotifier implements IListenable, IDisposable {
   constructor() {
     this.#listeners = new Map();
     this.#isDisposed = false;
+    Object.seal(this);
   }
 
   get instanceId(): string {
