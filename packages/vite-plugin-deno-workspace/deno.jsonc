@@ -16,5 +16,8 @@
       "read": true,
       "write": true
     }
+  },
+  "publish": {
+    "exclude": ["tests"]
   }
 }
