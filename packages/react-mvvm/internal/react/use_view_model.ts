@@ -68,6 +68,7 @@ const getCurrentRef = <
 ): InstanceType<TCtor> => {
   if (ref.current === null) {
     ref.current = new ctor(...args) as InstanceType<TCtor>;
+    Object.seal(ref.current);
   }
   return ref.current;
 };

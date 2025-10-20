@@ -18,19 +18,11 @@ import { ChangeNotifier } from "./change_notifier.ts";
  * ```
  */
 export class Observable<T> {
+  /** Internal notifier for managing listeners */
+  #changeNotifier: ChangeNotifier;
+
   /** The current value being observed */
   #value: T;
-
-  /** Internal notifier for managing listeners */
-  readonly #changeNotifier: ChangeNotifier = new ChangeNotifier();
-
-  /**
-   * Create a new Observable with an initial value.
-   * @param value - The initial value.
-   */
-  constructor(value: T) {
-    this.#value = value;
-  }
 
   /**
    * Get the current value.
@@ -53,6 +45,16 @@ export class Observable<T> {
   }
 
   /**
+   * Create a new Observable with an initial value.
+   * @param value - The initial value.
+   */
+  constructor(value: T) {
+    this.#changeNotifier = new ChangeNotifier();
+    this.#value = value;
+    Object.seal(this);
+  }
+
+  /**
    * Subscribes a listener to changes of the value.
    * The listener will be called with the new value whenever the value changes.
    *
@@ -64,10 +66,10 @@ export class Observable<T> {
     listener: (value: T) => void,
     options?: IAddListenerOptions,
   ): VoidFunction {
-    const wrappedListener = () => listener(this.#value);
-    this.#changeNotifier.addListener(wrappedListener, options);
+    const wrapped = () => listener(this.#value);
+    this.#changeNotifier.addListener(wrapped, options);
     return () => {
-      this.#changeNotifier.removeListener(wrappedListener);
+      this.#changeNotifier.removeListener(wrapped);
     };
   }
 }
