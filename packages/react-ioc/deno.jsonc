@@ -8,6 +8,7 @@
   },
   "compilerOptions": {
     "jsx": "react-jsx",
+    "jsxImportSource": "react",
     "lib": ["deno.ns", "dom"]
   },
   "imports": {
