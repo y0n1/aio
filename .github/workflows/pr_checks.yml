@@ -24,9 +24,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Deno
-        uses: denoland/setup-deno@e95548e56dfa95d4e1a28d6f422fafe75c4c26fb  # v2.0.3
+        uses: denoland/setup-deno@e95548e56dfa95d4e1a28d6f422fafe75c4c26fb # v2.0.3
         with:
           deno-version: v2.x
+          cache: true
 
       - name: Verify formatting
         run: deno fmt --check
@@ -35,4 +36,12 @@ jobs:
         run: deno lint
 
       - name: Run tests
-        run: deno test -A
+        run: |
+          deno test -P --coverage=cov/
+          deno coverage --lcov cov/ > coverage.lcov
+
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: cov/
