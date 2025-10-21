@@ -1,7 +1,7 @@
 import { ChangeNotifier } from "@y0n1/react-mvvm";
 import { Todo } from "../../../domain/models/Todo.ts";
 import type { TodoCounters } from "../../../domain/models/TodoCounters.ts";
-import type { ITodosCountersStore } from "../../../data/stores/todos/ICountersStore.ts";
+import type { ICountersStore } from "../../../data/stores/todos/ICountersStore.ts";
 import type { ITodosStore } from "../../../data/stores/todos/ITodosStore.ts";
 
 export class TodoListViewModel extends ChangeNotifier {
@@ -15,7 +15,7 @@ export class TodoListViewModel extends ChangeNotifier {
     return this.#todosStore.todos;
   }
 
-  #countersStore: ITodosCountersStore;
+  #countersStore: ICountersStore;
   get counters(): TodoCounters {
     return {
       completed: this.#countersStore.completed,
@@ -26,7 +26,7 @@ export class TodoListViewModel extends ChangeNotifier {
   constructor(
     draft = "",
     todosStore: ITodosStore,
-    countersStore: ITodosCountersStore,
+    countersStore: ICountersStore,
   ) {
     super();
     this.#draft = draft;

@@ -1,10 +1,10 @@
 import { useMemo } from "react";
 import { css } from "@emotion/css";
 import { useViewModel } from "@y0n1/react-mvvm";
-import { TodoListHeader } from "./TodoListHeader.tsx";
-import { TodoListForm } from "./TodoListForm.tsx";
-import { TodoListEmptyState } from "./TodoListEmptyState.tsx";
-import { TodoListItems } from "./TodoListItems.tsx";
+import { TodoListHeader } from "../view/TodoListHeader.tsx";
+import { TodoListForm } from "../view/TodoListForm.tsx";
+import { TodoListEmptyState } from "../view/TodoListEmptyState.tsx";
+import { TodoListItems } from "../view/TodoListItems.tsx";
 import { TodoListViewModel } from "../view-models/TodoListViewModel.ts";
 import { CountersStore } from "../../../data/stores/todos/CountersStore.ts";
 import { TodosStoreLocal } from "../../../data/stores/todos/TodosStoreLocal.ts";
