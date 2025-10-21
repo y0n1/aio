@@ -16,29 +16,6 @@ React components.
 - Designed for Deno-first projects while remaining compatible with modern
   JavaScript/TypeScript frameworks and toolchains.
 
-## Installation
-
-The package is published for Deno via `jsr` and can be added to your `deno.json`
-(or `deno.jsonc`) import map:
-
-```jsonc
-{
-  "imports": {
-    "@y0n1/react-mvvm": "jsr:@y0n1/react-mvvm"
-  }
-}
-```
-
-When working in a Node, Bun, or Vite project, you can install the npm
-distribution instead:
-
-```sh
-npm install @y0n1/react-mvvm
-```
-
-After installation, import the APIs you need directly from the package entry
-point (`mod.ts` for Deno or `dist/index.js` for npm-based builds).
-
 ## Quick Start
 
 Create a view-model by extending `ChangeNotifier` and expose the state your
