@@ -6,7 +6,7 @@ import { TodoListForm } from "./TodoListForm.tsx";
 import { TodoListEmptyState } from "./TodoListEmptyState.tsx";
 import { TodoListItems } from "./TodoListItems.tsx";
 import { TodoListViewModel } from "../view-models/TodoListViewModel.ts";
-import { TodosCountersStore } from "../../../data/stores/todos/TodosCountersStore.ts";
+import { CountersStore } from "../../../data/stores/todos/CountersStore.ts";
 import { TodosStoreLocal } from "../../../data/stores/todos/TodosStoreLocal.ts";
 
 const styles = css`
@@ -26,8 +26,8 @@ const styles = css`
 `;
 
 export const TodoList = (): React.ReactNode => {
-  const todosStore = useMemo(() => new TodosStoreLocal(), []);
-  const countersStore = useMemo(() => new TodosCountersStore(), []);
+  const todosStore = useMemo(() => Object.seal(new TodosStoreLocal()), []);
+  const countersStore = useMemo(() => Object.seal(new CountersStore()), []);
   const viewModel = useViewModel(
     TodoListViewModel,
     "Let's write todos!",
