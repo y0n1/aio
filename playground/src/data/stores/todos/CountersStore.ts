@@ -1,6 +1,6 @@
-import type { ITodosCountersStore } from "./ITodosCountersStore.ts";
+import type { ICountersStore } from "./ICountersStore.ts";
 
-export class TodosCountersStore implements ITodosCountersStore {
+export class CountersStore implements ICountersStore {
   #total: number;
   #completed: number;
 

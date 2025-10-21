@@ -1,7 +1,7 @@
 import { ChangeNotifier } from "@y0n1/react-mvvm";
 import { Todo } from "../../../domain/models/Todo.ts";
 import type { TodoCounters } from "../../../domain/models/TodoCounters.ts";
-import type { ITodosCountersStore } from "../../../data/stores/todos/ITodosCountersStore.ts";
+import type { ITodosCountersStore } from "../../../data/stores/todos/ICountersStore.ts";
 import type { ITodosStore } from "../../../data/stores/todos/ITodosStore.ts";
 
 export class TodoListViewModel extends ChangeNotifier {
