@@ -24,6 +24,6 @@
     }
   },
   "publish": {
-    "exclude": ["tests"]
+    "exclude": ["**/_*", "**/tests/**", "**/__tests__/**"]
   }
 }

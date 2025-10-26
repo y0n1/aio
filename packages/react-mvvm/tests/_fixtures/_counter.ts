@@ -1,4 +1,4 @@
-import { ChangeNotifier } from "../../internal/core/change_notifier.ts";
+import { ChangeNotifier } from "../../core/change_notifier.ts";
 
 /**
  * CounterNotifier is a view-model class implementing a simple counter.

@@ -3,7 +3,6 @@ import { useRerender } from "./use_rerender.ts";
 // deno-lint-ignore no-unused-vars
 import type { ChangeNotifier } from "../core/change_notifier.ts";
 import type { IListenable } from "../core/listenable.ts";
-import type { IDisposable } from "../core/disposable.ts";
 
 /**
  * Creates a singleton view-model instance that is persisted for the entire component's lifecycle.
@@ -23,7 +22,7 @@ import type { IDisposable } from "../core/disposable.ts";
 export function useViewModel<
   TCtor extends new (
     ...args: ConstructorParameters<TCtor>
-  ) => IListenable & IDisposable,
+  ) => IListenable,
 >(
   ctor: TCtor,
   ...args: ConstructorParameters<TCtor>
@@ -60,7 +59,7 @@ export function useViewModel<
 const getCurrentRef = <
   TCtor extends new (
     ...args: ConstructorParameters<TCtor>
-  ) => IListenable & IDisposable,
+  ) => IListenable,
 >(
   ctor: TCtor,
   args: ConstructorParameters<TCtor>,

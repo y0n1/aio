@@ -1,5 +1,5 @@
 import { assertEquals } from "@std/assert";
-import { ChangeNotifier } from "../internal/core/change_notifier.ts";
+import { ChangeNotifier } from "./change_notifier.ts";
 
 Deno.test(
   "notifyListeners allows removal of a subsequent listener without affecting the current run",
