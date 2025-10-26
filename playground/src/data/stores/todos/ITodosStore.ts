@@ -7,4 +7,5 @@ export interface ITodosStore {
   remove(id: Todo["id"]): Result<void, Error>;
   toggle(id: Todo["id"]): Result<Todo, Error>;
   find(id: Todo["id"]): Result<Todo, Error>;
+  load(): Promise<Result<Todo[], Error>>;
 }

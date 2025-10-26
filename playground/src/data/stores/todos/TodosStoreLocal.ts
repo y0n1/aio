@@ -1,15 +1,37 @@
-import { type Result, Results } from "@y0n1/react-mvvm";
-import type { Todo } from "../../../domain/models/Todo.ts";
+import { ChangeNotifier, type Result, Results } from "@y0n1/react-mvvm";
+import { Todo } from "../../../domain/models/Todo.ts";
 import type { ITodosStore } from "./ITodosStore.ts";
+import type { ITodosService } from "../../services/ITodosService.ts";
 
-export class TodosStoreLocal implements ITodosStore {
-  #todos: Todo[] = [];
+export class TodosStoreLocal extends ChangeNotifier implements ITodosStore {
+  #todos: Todo[];
   get todos(): Todo[] {
     return this.#todos;
   }
 
-  constructor() {
+  #todosService: ITodosService;
+
+  constructor(todosService: ITodosService) {
+    super();
     this.#todos = [];
+    this.#todosService = todosService;
+
+    this.load = this.load.bind(this);
+  }
+
+  async load(): Promise<Result<Todo[], Error>> {
+    const result = await this.#todosService.list();
+    if (!result.ok) {
+      return Results.Failure(result.error);
+    }
+
+    if (!(result.value instanceof Array)) {
+      return Results.Failure(new Error("TodosService did not return an array"));
+    }
+
+    return Results.Success(
+      result.value.map((todo) => new Todo(todo.id, todo.text, todo.completed)),
+    );
   }
 
   add(todo: Todo): void {
