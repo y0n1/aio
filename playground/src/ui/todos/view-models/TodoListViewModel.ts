@@ -1,4 +1,4 @@
-import { ChangeNotifier } from "@y0n1/react-mvvm";
+import { ChangeNotifier, Command, type Result } from "@y0n1/react-mvvm";
 import { Todo } from "../../../domain/models/Todo.ts";
 import type { TodoCounters } from "../../../domain/models/TodoCounters.ts";
 import type { ICountersStore } from "../../../data/stores/todos/ICountersStore.ts";
@@ -23,6 +23,11 @@ export class TodoListViewModel extends ChangeNotifier {
     };
   }
 
+  #loadCmd: Command<Todo[]>;
+  get loadCmd(): Command<Todo[]> {
+    return this.#loadCmd;
+  }
+
   constructor(
     draft = "",
     todosStore: ITodosStore,
@@ -37,6 +42,13 @@ export class TodoListViewModel extends ChangeNotifier {
     this.toggleTodo = this.toggleTodo.bind(this);
     this.removeTodo = this.removeTodo.bind(this);
     this.draftChange = this.draftChange.bind(this);
+
+    this.#loadCmd = new Command(this.#load.bind(this));
+    this.#loadCmd.execute();
+  }
+
+  #load(): Promise<Result<Todo[]>> {
+    return this.#todosStore.load();
   }
 
   addTodo(): void {
