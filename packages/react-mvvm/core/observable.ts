@@ -51,7 +51,6 @@ export class Observable<T> {
   constructor(value: T) {
     this.#changeNotifier = new ChangeNotifier();
     this.#value = value;
-    Object.seal(this);
   }
 
   /**
@@ -71,5 +70,30 @@ export class Observable<T> {
     return () => {
       this.#changeNotifier.removeListener(wrapped);
     };
+  }
+
+  /**
+   * Returns the underlying value of the observable.
+   * Useful for coercion (e.g., `Number(observable)`).
+   *
+   * @returns The current value.
+   * @see https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object/valueOf
+   */
+  valueOf(): T {
+    return this.#value;
+  }
+
+  /**
+   * Returns a string representation of the observable.
+   * @returns A string describing the observable and its current value.
+   *
+   * @example
+   * const obs = new Observable(42);
+   * obs.toString(); // "Observable(42)"
+   * 
+   * @see https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object/toString
+   */
+  toString(): string {
+    return `Observable(${this.#value})`;
   }
 }

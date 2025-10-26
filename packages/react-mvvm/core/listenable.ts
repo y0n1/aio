@@ -1,7 +1,9 @@
+import { IDisposable } from "./disposable.ts";
+
 /**
  * Interface for objects that can notify listeners of changes.
  */
-export interface IListenable {
+export interface IListenable extends IDisposable {
   /**
    * Checks if there are any listeners registered.
    */
@@ -26,11 +28,6 @@ export interface IListenable {
    * Notifies all listeners of a change.
    */
   notifyListeners(): void;
-
-  /**
-   * Disposes of the listenable object.
-   */
-  dispose(): void;
 }
 
 /**

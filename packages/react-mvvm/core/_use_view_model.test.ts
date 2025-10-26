@@ -1,4 +1,4 @@
-import "./_setup_tests.ts";
+import "../tests/_setup_tests.ts";
 import {
   assert,
   assertEquals,
@@ -6,9 +6,9 @@ import {
   assertStrictEquals,
 } from "@std/assert";
 import { act, renderHook } from "@testing-library/react";
-import { ChangeNotifier } from "../internal/core/change_notifier.ts";
-import { useViewModel } from "../internal/react/use_view_model.ts";
-import { CounterNotifier } from "./fixtures/counter.ts";
+import { ChangeNotifier } from "./change_notifier.ts";
+import { useViewModel } from "../react/use_view_model.ts";
+import { CounterNotifier } from "../tests/_fixtures/_counter.ts";
 
 Deno.test("useViewModel returns a non-disposed instance", () => {
   const { result } = renderHook(
