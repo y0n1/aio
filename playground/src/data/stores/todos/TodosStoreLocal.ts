@@ -1,7 +1,13 @@
-import { ChangeNotifier, type Result, Results } from "@y0n1/react-mvvm";
+import {
+  ChangeNotifier,
+  Command,
+  type Result,
+  Results,
+} from "@y0n1/react-mvvm";
 import { Todo } from "../../../domain/models/Todo.ts";
 import type { ITodosStore } from "./ITodosStore.ts";
 import type { ITodosService } from "../../services/ITodosService.ts";
+import type { ITodoApiModel } from "../../../api/models/ITodoApiModel.ts";
 
 export class TodosStoreLocal extends ChangeNotifier implements ITodosStore {
   #todos: Todo[];
@@ -10,28 +16,36 @@ export class TodosStoreLocal extends ChangeNotifier implements ITodosStore {
   }
 
   #todosService: ITodosService;
+  
+  #loadCmd: Command<Todo[], []>;
+  get loadCmd(): Command<Todo[], []> {
+    return this.#loadCmd;
+  }
 
   constructor(todosService: ITodosService) {
     super();
     this.#todos = [];
     this.#todosService = todosService;
 
-    this.load = this.load.bind(this);
+    this.#loadCmd = new Command(this.#load.bind(this));
   }
 
-  async load(): Promise<Result<Todo[], Error>> {
+  async #load(): Promise<Result<Todo[], Error>> {
     const result = await this.#todosService.list();
     if (!result.ok) {
-      return Results.Failure(result.error);
+      return result;
     }
 
     if (!(result.value instanceof Array)) {
       return Results.Failure(new Error("TodosService did not return an array"));
     }
 
-    return Results.Success(
-      result.value.map((todo) => new Todo(todo.id, todo.text, todo.completed)),
+    // Map to domain model
+    this.#todos = result.value.map((todo: ITodoApiModel) =>
+      new Todo(todo.id, todo.text, todo.completed)
     );
+
+    return Results.Success(this.#todos);
   }
 
   add(todo: Todo): void {

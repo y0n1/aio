@@ -34,7 +34,7 @@ export class TodosServiceLocal implements ITodosService {
       await delay(3000);
       return Results.Failure(new Error("Failed to list todos"));
     }
-    await delay(1000);
+    await delay(3000);
     return Results.Success(fakeRecords);
   }
 
