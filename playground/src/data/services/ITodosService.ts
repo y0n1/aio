@@ -1,5 +1,5 @@
 import type { Result } from "@y0n1/react-mvvm";
-import type { ITodoApiModel } from "../../api/models/ITodoApiModel.ts";
+import type { ITodoApiModel } from "../../models/apis/ITodoApiModel.ts";
 
 export interface ITodosService {
   list(): Promise<Result<ITodoApiModel[], Error>>;

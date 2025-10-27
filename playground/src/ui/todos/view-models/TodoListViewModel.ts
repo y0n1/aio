@@ -1,6 +1,6 @@
 import { ChangeNotifier, Command, Results } from "@y0n1/react-mvvm";
-import { Todo } from "../../../domain/models/Todo.ts";
-import type { TodoCounters } from "../../../domain/models/TodoCounters.ts";
+import { Todo } from "../../../models/domain/Todo.ts";
+import type { TodoCounters } from "../../../models/domain/TodoCounters.ts";
 import type { ICountersStore } from "../../../data/stores/todos/ICountersStore.ts";
 import type { ITodosStore } from "../../../data/stores/todos/ITodosStore.ts";
 

@@ -1,14 +1,14 @@
 import React, { useMemo } from "react";
+import { Results, useListenable, useViewModel } from "@y0n1/react-mvvm";
 import { TodoListViewModel } from "../view-models/TodoListViewModel.ts";
 import { CountersStore } from "../../../data/stores/todos/CountersStore.ts";
 import { TodosStoreLocal } from "../../../data/stores/todos/TodosStoreLocal.ts";
 import { TodosServiceLocal } from "../../../data/services/TodosServiceLocal.ts";
-import { TodoListView } from "../view/TodoListView.tsx";
-import { Results, useListenable, useViewModel } from "@y0n1/react-mvvm";
-import { TodoListLoadingView } from "../view/TodoListLoadingView.tsx";
-import { TodoListErrorView } from "../view/TodoListErrorView.tsx";
+import { TodoListView } from "./TodoListView.tsx";
+import { TodoListLoadingView } from "./TodoListLoadingView.tsx";
+import { TodoListErrorView } from "./TodoListErrorView.tsx";
 
-export const TodoList = (): React.ReactNode => {
+export const TodoListScreen = (): React.ReactNode => {
   const todosService = useMemo(() => Object.seal(new TodosServiceLocal()), []);
   const todosStore = useMemo(
     () => Object.seal(new TodosStoreLocal(todosService)),
@@ -52,10 +52,4 @@ export const TodoList = (): React.ReactNode => {
       return null;
   }
 };
-TodoList.displayName = "TodoList";
-
-const Logger: React.FC<{ args: unknown[] }> = (props): React.ReactNode => {
-  console.log(props.args);
-  return null;
-};
-Logger.displayName = "Logger";
+TodoListScreen.displayName = "TodoListScreen";

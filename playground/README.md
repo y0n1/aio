@@ -1,84 +1,184 @@
-# React + TypeScript + Vite
+# React MVVM Playground
 
-This template provides a minimal setup to get React working in Vite with HMR and
-some ESLint rules.
+A demonstration application showcasing the `@y0n1/react-mvvm` package and the
+Model-View-ViewModel (MVVM) pattern in React. This playground implements a Todo
+List application using MVVM architecture to demonstrate real-world usage of
+ViewModels, Commands, and the separation of concerns between UI and business
+logic.
 
-Currently, two official plugins are available:
+## What's Inside
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react)
-  uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc)
-  uses [SWC](https://swc.rs/) for Fast Refresh
+This playground demonstrates:
 
-## React Compiler
+- **ViewModels** - Encapsulation of business logic and state management separate
+  from UI components
+- **Commands** - Lifecycle management for async operations (loading, error
+  handling)
+- **Change Notifications** - Reactive updates using the `ChangeNotifier` pattern
+- **Stores & Services** - Data layer separation with clear boundaries
+- **Result Types** - Type-safe error handling without exceptions
+- **Comparison** - Classic React (hooks) vs MVVM implementation side-by-side
 
-The React Compiler is enabled on this template. See
-[this documentation](https://react.dev/learn/react-compiler) for more
-information.
+## Quick Start
 
-Note: This will impact Vite dev & build performances.
+### Prerequisites
 
-## Expanding the ESLint configuration
+- [Deno](https://deno.land/) (recommended) or Node.js 18+
 
-If you are developing a production application, we recommend updating the
-configuration to enable type-aware lint rules:
+### Run the Playground
 
-```js
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```bash
+# 
+# Or with Deno
+deno task dev
 ```
 
-You can also install
-[eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x)
-and
-[eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom)
-for React-specific lint rules:
+Open [http://localhost:5173](http://localhost:5173) to view the app.
 
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
+## Project Structure
 
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs["recommended-typescript"],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
 ```
+playground/
+├── src/
+│   ├── models/           # Domain models and API models
+│   │   ├── domain/       # Business entities (Todo, TodoCounters)
+│   │   └── apis/         # API response models
+│   ├── data/             # Data layer
+│   │   ├── services/     # Data fetching/persistence services
+│   │   └── stores/       # State management stores
+│   └── ui/               # Presentation layer
+│       └── todos/
+│           ├── components/       # React components
+│           ├── view-models/      # ViewModels (business logic)
+│           └── view/             # Presentational components
+```
+
+## MVVM in Action
+
+### The ViewModel
+
+ViewModels encapsulate all business logic, state management, and side effects:
+
+```typescript
+class TodoListViewModel extends ChangeNotifier {
+  #draft: string;
+  #todosStore: ITodosStore;
+
+  get todos(): Todo[] {
+    return this.#todosStore.todos;
+  }
+
+  addTodo(): void {
+    if (!this.#draft.trim()) return;
+
+    this.#todosStore.add(new Todo(crypto.randomUUID(), this.#draft, false));
+    this.#draft = "";
+    this.notifyListeners(); // Trigger UI update
+  }
+
+  // ... more methods
+}
+```
+
+### The View
+
+React components become pure presentational layers:
+
+```tsx
+export const TodoListMvvm = (): React.ReactNode => {
+  const vm = useViewModel(TodoListViewModel, todosStore, countersStore);
+
+  return (
+    <TodoListView
+      todos={vm.todos}
+      draft={vm.draft}
+      onAddTodo={vm.addTodo}
+      onDraftChange={vm.draftChange}
+    />
+  );
+};
+```
+
+## Key Features Demonstrated
+
+### 1. **Separation of Concerns**
+
+Business logic lives in ViewModels, not in React components. This makes logic
+testable without rendering components.
+
+### 2. **Commands for Async Operations**
+
+Commands automatically track execution state (running, completed, failed):
+
+```typescript
+const loadCmd = new Command(() => todosService.fetchAll());
+// UI can react to loadCmd.status: "idle" | "running" | "done" | "failed"
+```
+
+### 3. **Type-Safe Error Handling**
+
+Using `Result<T, E>` instead of try-catch:
+
+```typescript
+const result = todosStore.find(id);
+if (!result.ok) {
+  console.warn(result.error);
+  return;
+}
+const todo = result.value;
+```
+
+### 4. **Automatic Cleanup**
+
+ViewModels are automatically disposed when components unmount, preventing memory
+leaks.
+
+## Comparisons
+
+The playground includes both:
+
+- **Classic React** implementation (`TodoListClassic.tsx`) - using hooks and
+  local state
+- **MVVM** implementation (`TodoListMvvm.tsx`) - using ViewModels
+
+Compare them to see the architectural differences and benefits of MVVM for
+larger applications.
+
+## Learn More
+
+- [@y0n1/react-mvvm Documentation](../packages/react-mvvm/README.md)
+- [MVVM Pattern](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel)
+- [Flutter App Architecture Guide](https://docs.flutter.dev/app-architecture)
+  (inspiration)
+
+## Tech Stack
+
+- **React 19** - UI library
+- **TypeScript** - Type safety
+- **Vite** - Build tool and dev server
+- **@y0n1/react-mvvm** - MVVM primitives for React
+- **Deno** - Runtime and package management (optional)
+
+## Development
+
+```bash
+# Run tests (if implemented)
+npm run test
+
+# Build for production
+npm run build
+
+# Format code
+deno task format
+# or
+npm run format
+
+# Lint code
+deno task lint
+# or
+npm run lint
+```
+
+## License
+
+Apache 2.0 © y0n1

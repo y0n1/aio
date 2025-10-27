@@ -1,5 +1,5 @@
 import { css } from "@emotion/css";
-import type { TodoCounters } from "../models/domain/TodoCounters.ts";
+import type { TodoCounters } from "../../../models/domain/TodoCounters.ts";
 
 const style = css`
   display: flex;

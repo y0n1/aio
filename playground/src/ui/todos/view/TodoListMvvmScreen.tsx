@@ -1,12 +1,12 @@
 import { useMemo } from "react";
 import { useViewModel } from "@y0n1/react-mvvm";
-import { TodoListView } from "../view/TodoListView.tsx";
+import { TodoListView } from "./TodoListView.tsx";
 import { TodoListViewModel } from "../view-models/TodoListViewModel.ts";
 import { CountersStore } from "../../../data/stores/todos/CountersStore.ts";
 import { TodosStoreLocal } from "../../../data/stores/todos/TodosStoreLocal.ts";
 import { TodosServiceLocal } from "../../../data/services/TodosServiceLocal.ts";
 
-export const TodoListMvvm = (): React.ReactNode => {
+export const TodoListMvvmScreen = (): React.ReactNode => {
   // These could be injected using a DI container like InversifyJS (or @y0n1/react-ioc ;-P)
   const todosService = useMemo(() => Object.seal(new TodosServiceLocal()), []);
   const todosStore = useMemo(
@@ -33,4 +33,4 @@ export const TodoListMvvm = (): React.ReactNode => {
     />
   );
 };
-TodoListMvvm.displayName = "TodoListMvvm";
+TodoListMvvmScreen.displayName = "TodoListMvvmScreen";
