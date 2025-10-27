@@ -1,4 +1,4 @@
-import { ChangeNotifier, Command, type Result } from "@y0n1/react-mvvm";
+import { ChangeNotifier, Command, Results } from "@y0n1/react-mvvm";
 import { Todo } from "../../../domain/models/Todo.ts";
 import type { TodoCounters } from "../../../domain/models/TodoCounters.ts";
 import type { ICountersStore } from "../../../data/stores/todos/ICountersStore.ts";
@@ -23,9 +23,8 @@ export class TodoListViewModel extends ChangeNotifier {
     };
   }
 
-  #loadCmd: Command<Todo[]>;
-  get loadCmd(): Command<Todo[]> {
-    return this.#loadCmd;
+  get loadCmd(): Command<Todo[], []> {
+    return this.#todosStore.loadCmd;
   }
 
   constructor(
@@ -43,13 +42,24 @@ export class TodoListViewModel extends ChangeNotifier {
     this.removeTodo = this.removeTodo.bind(this);
     this.draftChange = this.draftChange.bind(this);
 
-    this.#loadCmd = new Command(this.#load.bind(this));
-    this.#loadCmd.execute();
+    this.#todosStore.loadCmd.addListener(this.#loadAction);
+    this.#todosStore.loadCmd.execute();
   }
 
-  #load(): Promise<Result<Todo[]>> {
-    return this.#todosStore.load();
-  }
+  #loadAction = (): void => {
+    if (this.#todosStore.loadCmd.status === "done") {
+      const result = this.#todosStore.loadCmd.result;
+      if (Results.isSuccess<Todo[]>(result)) {
+        for (const todo of (result.value ?? [])) {
+          if (todo.completed) {
+            this.#countersStore.incrementCompleted();
+          }
+          this.#countersStore.incrementTotal();
+        }
+      }
+      this.notifyListeners();
+    }
+  };
 
   addTodo(): void {
     const value = this.#draft.trim();
@@ -102,6 +112,7 @@ export class TodoListViewModel extends ChangeNotifier {
   }
 
   override dispose(): void {
+    this.#todosStore.loadCmd.removeListener(this.#loadAction);
     super.dispose();
   }
 }
