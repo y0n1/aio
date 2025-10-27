@@ -90,7 +90,7 @@ export class Observable<T> {
    * @example
    * const obs = new Observable(42);
    * obs.toString(); // "Observable(42)"
-   * 
+   *
    * @see https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object/toString
    */
   toString(): string {

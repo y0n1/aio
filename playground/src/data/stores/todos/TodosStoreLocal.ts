@@ -16,7 +16,7 @@ export class TodosStoreLocal extends ChangeNotifier implements ITodosStore {
   }
 
   #todosService: ITodosService;
-  
+
   #loadCmd: Command<Todo[], []>;
   get loadCmd(): Command<Todo[], []> {
     return this.#loadCmd;
