@@ -12,10 +12,12 @@
  * - Command with various argument types (none, single, multiple)
  *
  * ### Status Management
- * - Status lifecycle: idle → idle (clear) → running → running (result) → done
+ * - Status lifecycle: idle → running → done (first execution)
+ * - Re-execution: done → running → done (no idle transition)
  * - Status persistence after completion
  * - Status behavior during async operations
  * - Re-entrant execution prevention
+ * - Explicit clear: done → idle
  *
  * ### Result Management
  * - Result storage and retrieval
@@ -24,7 +26,7 @@
  * - Void/undefined result values
  *
  * ### Listener Notifications
- * - Four notifications per execution: clear, running, result, done
+ * - Two notifications per execution: running, done
  * - Listener addition and removal
  * - Listener removal during notification
  * - Once-option listeners (single invocation)
@@ -36,22 +38,20 @@
  * ## Status Lifecycle
  *
  * The command status follows this lifecycle:
- * 1. **idle** (initial state or after clear)
+ * 1. **idle** (initial state or after explicit clear())
  * 2. **running** (during action execution)
  * 3. **done** (after execution completes)
  *
- * ### Four Notifications Per Normal Execution
- * Each successful execution triggers exactly four listener notifications:
- * 1. Clear notification (status: "idle", result: null)
- * 2. Running notification (status: "running", result: null)
- * 3. Result notification (status: "running", result: success/failure)
- * 4. Done notification (status: "done", result: success/failure)
+ * ### Status Transitions
+ * - Initial state: `idle` (result: null)
+ * - First execution: `idle` → `running` → `done`
+ * - Re-execution: `done` → `running` → `done` (no idle transition)
+ * - After clear(): `done` → `idle`
  *
- * ### Three Notifications When Error is Thrown
- * When an error is thrown (not returned as Result), there are three notifications:
- * 1. Clear notification (status: "idle", result: null)
- * 2. Running notification (status: "running", result: null)
- * 3. Done notification (status: "done", result: failure)
+ * ### Two Notifications Per Execution
+ * Each execution triggers exactly two listener notifications:
+ * 1. Running notification (status: "running", result: null)
+ * 2. Done notification (status: "done", result: success/failure)
  *
  * ### Re-entrant Execution Prevention
  * The command properly prevents concurrent execution by checking if status === "running".
@@ -104,9 +104,7 @@ Deno.test(
 
     assertEquals(runCount, 1);
     assertEquals(snapshots, [
-      { status: "idle", result: null }, // Clear notification
       { status: "running", result: null }, // Running notification
-      { status: "running", result: "success" }, // Result notification
       { status: "done", result: "success" }, // Done notification
     ]);
     assertEquals(command.status, "done");
@@ -160,9 +158,8 @@ Deno.test("Command captures thrown errors as failure results", async () => {
   await command.execute();
 
   assertEquals(snapshots, [
-    { status: "idle", result: null }, // Clear notification
     { status: "running", result: null }, // Running notification
-    { status: "done", result: "failure" }, // Done notification (error caught in finally)
+    { status: "done", result: "failure" }, // Done notification (error caught)
   ]);
   assertEquals(command.status, "done");
   const result = command.result;
@@ -216,8 +213,8 @@ Deno.test(
 
     await command.execute();
 
-    // Status goes: idle (initial) -> idle (clear) -> running -> running (result) -> done (finally)
-    assertEquals(statusHistory, ["idle", "idle", "running", "running", "done"]);
+    // Status goes: idle (initial) -> running -> done
+    assertEquals(statusHistory, ["idle", "running", "done"]);
     assertEquals(command.status, "done");
   },
 );
@@ -275,7 +272,7 @@ Deno.test("Command clears previous result on re-execution after done", async () 
 });
 
 Deno.test(
-  "Command notifies listeners when clearing before re-execution",
+  "Command re-execution transitions directly from done to running",
   async () => {
     const command = new Command(() => Results.Success("value"));
     const snapshots: Snapshot[] = [];
@@ -292,13 +289,11 @@ Deno.test(
       });
     });
 
-    // Second execution should notify on all four phases
+    // Second execution transitions: done → running → done (no idle)
     await command.execute();
 
     assertEquals(snapshots, [
-      { status: "idle", result: null }, // Clear notification
       { status: "running", result: null }, // Running notification
-      { status: "running", result: "success" }, // Result notification
       { status: "done", result: "success" }, // Done notification
     ]);
   },
@@ -478,7 +473,7 @@ Deno.test(
 );
 
 Deno.test(
-  "Command notifies listeners exactly four times per execution",
+  "Command notifies listeners exactly twice per execution",
   async () => {
     const command = new Command(() => Results.Success("value"));
     let notificationCount = 0;
@@ -489,7 +484,7 @@ Deno.test(
 
     await command.execute();
 
-    assertEquals(notificationCount, 4);
+    assertEquals(notificationCount, 2);
   },
 );
 
@@ -532,12 +527,8 @@ Deno.test("Command listener can be removed during notification", async () => {
   await command.execute();
 
   // listener3 is removed on first notification, so it never runs
-  // listener1 and listener2 are called for all 4 notifications
+  // listener1 and listener2 are called for both notifications (running, done)
   assertEquals(calls, [
-    "listener1",
-    "listener2",
-    "listener1",
-    "listener2",
     "listener1",
     "listener2",
     "listener1",
@@ -590,5 +581,64 @@ Deno.test(
     // Execute again, listener should not be called
     await command.execute();
     assertEquals(callCount, 1);
+  },
+);
+
+Deno.test("Command clear() transitions status from done to idle", async () => {
+  const command = new Command(() => Results.Success("value"));
+  const snapshots: Snapshot[] = [];
+
+  // Execute command
+  await command.execute();
+  assertEquals(command.status, "done");
+  const result = command.result;
+  assert(result);
+  assert(result.ok);
+
+  // Add listener to track clear notification
+  command.addListener(() => {
+    snapshots.push({
+      status: command.status,
+      result: getResultStatus(command.result),
+    });
+  });
+
+  // Clear should transition to idle and notify
+  command.clear();
+
+  assertEquals(command.status, "idle");
+  assertEquals(command.result, null);
+  assertEquals(snapshots, [
+    { status: "idle", result: null }, // Clear notification
+  ]);
+});
+
+Deno.test(
+  "Command execution after clear() starts from idle state",
+  async () => {
+    const command = new Command(() => Results.Success("value"));
+    const snapshots: Snapshot[] = [];
+
+    // Execute and clear
+    await command.execute();
+    command.clear();
+    assertEquals(command.status, "idle");
+
+    // Add listener to track next execution
+    command.addListener(() => {
+      snapshots.push({
+        status: command.status,
+        result: getResultStatus(command.result),
+      });
+    });
+
+    // Execute again from idle
+    await command.execute();
+
+    assertEquals(snapshots, [
+      { status: "running", result: null }, // Running notification
+      { status: "done", result: "success" }, // Done notification
+    ]);
+    assertEquals(command.status, "done");
   },
 );
