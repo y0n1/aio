@@ -5,6 +5,6 @@ export * from "./core/observable.ts";
 export * from "./core/result.ts";
 export type * from "./core/disposable.ts";
 export type * from "./core/listenable.ts";
-export * from "./react/listenable.tsx";
 export * from "./react/use_listenable.ts";
+export * from "./react/use_observable.ts";
 export * from "./react/use_view_model.ts";
