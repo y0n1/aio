@@ -17,7 +17,7 @@ object-oriented patterns are rarely practical in idiomatic React code. By
 bridging the gap between idiomatic React code and the proven
 Model-View-ViewModel (MVVM) pattern (as used in modern frameworks like Flutter,
 SwiftUI, Angular, Jetpack Compose, .NET MAUI, and many others) you'll be able to
-regain control over you application architecture, build scalable, maintainable
++regain control over your application architecture, build scalable, maintainable
 and well-structured enterprise-grade React applications.
 
 ## Features
