@@ -22,9 +22,20 @@ export type ActionLike<TResult, TArgs extends unknown[] = unknown[]> =
  *
  * ### Status Semantics
  * The command's `status` property can be one of the following values:
- * - `"idle"`: The command has not started running, or it has already completed an execution (successfully or with error) and is now ready for execution again. This is the default starting state.
+ * - `"idle"`: The command has never been executed, or has been explicitly cleared via `clear()`. This is the default starting state.
  * - `"running"`: The command is actively executing its associated action. During this state, further execution requests will be ignored until the current execution completes.
- * - `"done"`: The command has completed its most recent execution, and the result (success or failure) is available. It will transition back to `"idle"` once reset or before a new execution.
+ * - `"done"`: The command has completed its most recent execution, and the result (success or failure) is available. The command can be re-executed directly from this state without transitioning back to `"idle"`.
+ *
+ * ### Status Lifecycle
+ * - Initial state: `idle` (no result)
+ * - First execution: `idle` → `running` → `done`
+ * - Re-execution: `done` → `running` → `done`
+ * - After clear(): `done` → `idle` (ready for clean slate execution)
+ *
+ * ### Listener Notifications
+ * Each execution triggers exactly two notifications:
+ * 1. When transitioning to `"running"` (result is cleared to null)
+ * 2. When transitioning to `"done"` (result is available)
  *
  * @template TActionArgs - The argument types accepted by the action.
  * @template TResult - The result type of the action.
@@ -71,9 +82,10 @@ export class Command<TResult, TActionArgs extends unknown[] = unknown[]>
    *
    * @remarks
    * - If the command is already running, this method returns immediately to prevent concurrent or re-entrant execution.
-   * - The method clears the previous result before execution.
-   * - Listeners are notified after a successful or failed execution.
-   * - The command's running state is updated accordingly.
+   * - The method clears the previous result before execution (sets it to null).
+   * - The status transitions to `"running"` and listeners are notified.
+   * - After execution completes, the status transitions to `"done"` and listeners are notified again.
+   * - Re-execution from `"done"` state transitions directly to `"running"` without passing through `"idle"`.
    *
    * @param args - The arguments to pass to the underlying action.
    * @returns A Promise that resolves when execution is complete.
@@ -89,13 +101,12 @@ export class Command<TResult, TActionArgs extends unknown[] = unknown[]>
       return;
     }
 
-    this.#clear();
+    this.#result = null;
     this.#status = "running";
     this.notifyListeners();
 
     try {
       this.#result = await this.#action(...args);
-      this.notifyListeners();
     } catch (error) {
       this.#result = Results.Failure(error as Error);
     } finally {
@@ -105,14 +116,17 @@ export class Command<TResult, TActionArgs extends unknown[] = unknown[]>
   }
 
   /**
-   * Resets the command's state to idle, clears its result and notifies listeners.
+   * Clears the command's result and resets its status to idle.
    *
    * @remarks
-   * - This method is called automatically when the command is executed.
+   * This method explicitly transitions the command to the `"idle"` state,
+   * clearing any previous result. Use this when you want to reset the command
+   * to a clean slate, as if it had never been executed.
+   * Listeners are notified of this state change.
    */
-  #clear(): void {
-    this.#status = "idle";
+  clear(): void {
     this.#result = null;
+    this.#status = "idle";
     this.notifyListeners();
   }
 }
