@@ -205,7 +205,7 @@ Deno.test("useObservable works with object values", () => {
 Deno.test("useObservable works with null and undefined values", () => {
   const observable = new Observable<number | null | undefined>(null);
 
-  const { result, unmount, rerender } = renderHook(
+  const { result, unmount } = renderHook(
     () => useObservable(observable),
     STRICT_MODE,
   );
@@ -540,7 +540,7 @@ Deno.test("useObservable doesn't leak subscriptions after multiple mounts/unmoun
 Deno.test("useObservable doesn't leak subscriptions after multiple observable changes", () => {
   const observables = Array.from({ length: 5 }, (_, i) => new Observable(i));
 
-  let activeSubscriptionCounts = new Array(5).fill(0);
+  const activeSubscriptionCounts = new Array(5).fill(0);
 
   // Track active subscriptions for each observable
   observables.forEach((obs, idx) => {
@@ -586,7 +586,7 @@ Deno.test("useObservable cleans up properly with rapid observable changes", () =
     (_, i) => new Observable(i),
   );
 
-  let activeSubscriptionCounts = new Array(10).fill(0);
+  const activeSubscriptionCounts = new Array(10).fill(0);
 
   // Track active subscriptions for each observable
   observables.forEach((obs, idx) => {
