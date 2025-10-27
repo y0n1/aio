@@ -1,10 +1,10 @@
 import { css } from "@emotion/css";
-import { useListenable } from "@y0n1/react-mvvm";
 import { TodoListHeader } from "./TodoListHeader.tsx";
 import { TodoListForm } from "./TodoListForm.tsx";
 import { TodoListEmptyState } from "./TodoListEmptyState.tsx";
 import { TodoListItems } from "./TodoListItems.tsx";
-import type { TodoListViewModel } from "../view-models/TodoListViewModel.ts";
+import type { Todo } from "../../../models/domain/Todo.ts";
+import type { TodoCounters } from "../../../models/domain/TodoCounters.ts";
 
 const styles = css`
   width: 100%;
@@ -23,29 +23,33 @@ const styles = css`
 `;
 
 interface TodoListViewProps {
-  viewModel: TodoListViewModel;
+  draft: string;
+  onDraftChange: (value: string) => void;
+  todos: Todo[];
+  onAddTodo: () => void;
+  onRemoveTodo: (id: string) => void;
+  onToggleTodo: (id: string) => void;
+  counters: TodoCounters;
 }
 
-export const TodoListView = (
-  { viewModel }: TodoListViewProps,
-): React.ReactNode => {
-  useListenable(viewModel);
-  return (
-    <section className={styles} aria-label="todo list">
-      <TodoListHeader counters={viewModel.counters} />
-      <TodoListForm
-        draft={viewModel.draft}
-        onSubmit={viewModel.addTodo}
-        onDraftChange={viewModel.draftChange}
+export const TodoListView: React.FC<
+  React.PropsWithChildren<TodoListViewProps>
+> = (props): React.ReactNode => (
+  <section className={styles} aria-label="todo list">
+    <TodoListHeader counters={props.counters} />
+    <TodoListForm
+      draft={props.draft}
+      onSubmit={props.onAddTodo}
+      onDraftChange={props.onDraftChange}
+    />
+    {props.todos.length === 0 ? <TodoListEmptyState /> : (
+      <TodoListItems
+        todos={props.todos}
+        onToggle={props.onToggleTodo}
+        onRemove={props.onRemoveTodo}
       />
-      {viewModel.todos.length === 0 ? <TodoListEmptyState /> : (
-        <TodoListItems
-          todos={viewModel.todos}
-          onToggle={viewModel.toggleTodo}
-          onRemove={viewModel.removeTodo}
-        />
-      )}
-    </section>
-  );
-};
+    )}
+  </section>
+);
+
 TodoListView.displayName = "TodoListView";

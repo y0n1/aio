@@ -61,7 +61,7 @@ export const TodoListForm = ({
       id="TodoListForm-input"
       className={inputStyles}
       value={draft}
-      placeholder="Try typing 'Ship feature PR'"
+      placeholder="Try typing 'Ship that feature'"
       onChange={(e) => onDraftChange(e.target.value)}
     />
     <TodoListButton type="submit">Add</TodoListButton>

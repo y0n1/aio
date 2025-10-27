@@ -1,5 +1,5 @@
 import { css } from "@emotion/css";
-import { TodoList } from "./todos/view/TodoList.tsx";
+import { TodoListScreen } from "./todos/view/TodoListScreen.tsx";
 // import { TodoListAlternative } from "./todos/view/TodoListAlternative.tsx";
 
 const styles = css`
@@ -19,7 +19,7 @@ export default function App(): React.ReactNode {
     <div className={styles}>
       <h1>MVVM Playground</h1>
 
-      <TodoList />
+      <TodoListScreen />
       {/* <TodoListAlternative /> */}
     </div>
   );

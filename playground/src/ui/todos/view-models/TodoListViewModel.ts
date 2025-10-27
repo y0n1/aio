@@ -1,7 +1,7 @@
-import { ChangeNotifier } from "@y0n1/react-mvvm";
-import { Todo } from "../../../domain/models/Todo.ts";
-import type { TodoCounters } from "../../../domain/models/TodoCounters.ts";
-import type { ITodosCountersStore } from "../../../data/stores/todos/ITodosCountersStore.ts";
+import { ChangeNotifier, Command, Results } from "@y0n1/react-mvvm";
+import { Todo } from "../../../models/domain/Todo.ts";
+import type { TodoCounters } from "../../../models/domain/TodoCounters.ts";
+import type { ICountersStore } from "../../../data/stores/todos/ICountersStore.ts";
 import type { ITodosStore } from "../../../data/stores/todos/ITodosStore.ts";
 
 export class TodoListViewModel extends ChangeNotifier {
@@ -15,7 +15,7 @@ export class TodoListViewModel extends ChangeNotifier {
     return this.#todosStore.todos;
   }
 
-  #countersStore: ITodosCountersStore;
+  #countersStore: ICountersStore;
   get counters(): TodoCounters {
     return {
       completed: this.#countersStore.completed,
@@ -23,10 +23,14 @@ export class TodoListViewModel extends ChangeNotifier {
     };
   }
 
+  get loadCmd(): Command<Todo[], []> {
+    return this.#todosStore.loadCmd;
+  }
+
   constructor(
     draft = "",
     todosStore: ITodosStore,
-    countersStore: ITodosCountersStore,
+    countersStore: ICountersStore,
   ) {
     super();
     this.#draft = draft;
@@ -37,7 +41,25 @@ export class TodoListViewModel extends ChangeNotifier {
     this.toggleTodo = this.toggleTodo.bind(this);
     this.removeTodo = this.removeTodo.bind(this);
     this.draftChange = this.draftChange.bind(this);
+
+    this.#todosStore.loadCmd.addListener(this.#loadAction);
+    this.#todosStore.loadCmd.execute();
   }
+
+  #loadAction = (): void => {
+    if (this.#todosStore.loadCmd.status === "done") {
+      const result = this.#todosStore.loadCmd.result;
+      if (Results.isSuccess<Todo[]>(result)) {
+        for (const todo of (result.value ?? [])) {
+          if (todo.completed) {
+            this.#countersStore.incrementCompleted();
+          }
+          this.#countersStore.incrementTotal();
+        }
+      }
+      this.notifyListeners();
+    }
+  };
 
   addTodo(): void {
     const value = this.#draft.trim();
@@ -90,6 +112,7 @@ export class TodoListViewModel extends ChangeNotifier {
   }
 
   override dispose(): void {
+    this.#todosStore.loadCmd.removeListener(this.#loadAction);
     super.dispose();
   }
 }

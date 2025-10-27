@@ -1,18 +1,37 @@
 # @y0n1/react-mvvm
 
-Building React features with the Model-View-ViewModel pattern in TypeScript.
-This package provides a lightweight set of primitives for creating view-models
-that manage state, notify interested listeners, and integrate seamlessly with
-React components.
+A library for building React applications using the well-established
+Model-View-ViewModel pattern. This package provides a lightweight set of
+primitives for creating view-models that integrate seamlessly with React.
+
+## Motivation
+
+This library was largely inspired by
+[Flutter's App architecture guide](https://docs.flutter.dev/app-architecture). I
+strongly encourage you to invest some of your time and read it.
+
+React is a powerful view library, not a full framework—leaving code organization
+choices open-ended. As projects grow, app logic and "helper" functions easily
+become scattered with no clear boundaries or domain ownership, and
+object-oriented patterns are rarely practical in idiomatic React code. By
+bridging the gap between idiomatic React code and the proven
+Model-View-ViewModel (MVVM) pattern (as used in modern frameworks like Flutter,
+SwiftUI, Angular, Jetpack Compose, .NET MAUI, and many others) you'll be able to
++regain control over your application architecture, build scalable, maintainable
+and well-structured enterprise-grade React applications.
 
 ## Features
 
-- `useViewModel` React hook keeps a single view-model instance alive for the
-  lifetime of a component.
 - `ChangeNotifier` base class tracks listeners and emits change notifications.
+- `useViewModel` A react hook that helps initialize and dispose a view-model for
+  the lifetime of a component.
+- `useListenable` A convenience react hook for updating components whenever a
+  [IListenable](./core/listenable.ts) notifies of changes.
 - `Observable<T>` wraps mutable values with change notifications and typed
   subscriptions.
-- `Results` helpers model success/failure outcomes without exceptions.
+- `Results` helps model success/failure outcomes without exceptions.
+- `Command` encapsulates the lifecycle of an action, managing its execution
+  state and result for use with UI components.
 - Designed for Deno-first projects while remaining compatible with modern
   JavaScript/TypeScript frameworks and toolchains.
 
@@ -55,27 +74,10 @@ export function Counter(): React.ReactNode {
 }
 ```
 
-The `useViewModel` hook constructs the view-model once, subscribes the component
-to future notifications, and automatically disposes the instance when the
-component unmounts. Any method that mutates state should call
-`notifyListeners()` so the view re-renders.
-
-## API Overview
-
-- `useViewModel(ctor, ...args)` – creates and returns a persistent view-model
-  instance.
-- `useRerender()` – internal hook used for triggering renders; exported in case
-  you need a lightweight rerender helper.
-- `ChangeNotifier` – base class with listener management, `dispose()`, and
-  `notifyListeners()`.
-- `Observable<T>` – observable value with subscription support and optional
-  one-time listeners.
-- `Results` – `Success` / `Failure` tagged unions plus helpers for constructing
-  them.
-- Core interfaces: `IListenable`, `IAddListenerOptions`, and `IDisposable`.
-
-Refer to the source files under `internal/` for more details and inline
-documentation.
+The `useViewModel` hook constructs the view-model once, subscribes the
+component's state to future notifications, and automatically disposes the
+instance when the component unmounts. **Any method that mutates state should
+call `notifyListeners()` so the view re-renders**.
 
 ## Testing
 
@@ -85,8 +87,8 @@ Run the package test suite with Deno:
 deno task test
 ```
 
-The test setup relies on `linkedom` to provide a DOM environment for React
-testing utilities.
+The test uses `linkedom` to provide a DOM environment for React testing
+utilities.
 
 ## License
 

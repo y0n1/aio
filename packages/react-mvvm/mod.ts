@@ -1,7 +1,10 @@
-export * from "./internal/react/use_view_model.ts";
-export * from "./internal/react/use_listenable.ts";
-export * from "./internal/core/change_notifier.ts";
-export * from "./internal/core/observable.ts";
-export * from "./internal/core/result.ts";
-export type * from "./internal/core/disposable.ts";
-export type * from "./internal/core/listenable.ts";
+export * from "./core/change_notifier.ts";
+export * from "./core/command.ts";
+export * from "./core/native_observable.ts";
+export * from "./core/observable.ts";
+export * from "./core/result.ts";
+export type * from "./core/disposable.ts";
+export type * from "./core/listenable.ts";
+export * from "./react/use_listenable.ts";
+export * from "./react/use_observable.ts";
+export * from "./react/use_view_model.ts";
