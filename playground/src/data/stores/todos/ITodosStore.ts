@@ -1,5 +1,5 @@
 import type { ChangeNotifier, Command, Result } from "@y0n1/react-mvvm";
-import type { Todo } from "../../../domain/models/Todo.ts";
+import type { Todo } from "../../../models/domain/Todo.ts";
 
 export interface ITodosStore extends ChangeNotifier {
   get todos(): Todo[];

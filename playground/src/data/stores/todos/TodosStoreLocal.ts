@@ -4,10 +4,10 @@ import {
   type Result,
   Results,
 } from "@y0n1/react-mvvm";
-import { Todo } from "../../../domain/models/Todo.ts";
+import { Todo } from "../../../models/domain/Todo.ts";
 import type { ITodosStore } from "./ITodosStore.ts";
 import type { ITodosService } from "../../services/ITodosService.ts";
-import type { ITodoApiModel } from "../../../api/models/ITodoApiModel.ts";
+import type { ITodoApiModel } from "../../../models/apis/ITodoApiModel.ts";
 
 export class TodosStoreLocal extends ChangeNotifier implements ITodosStore {
   #todos: Todo[];

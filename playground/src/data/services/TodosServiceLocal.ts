@@ -1,7 +1,7 @@
 import { delay } from "@std/async";
 import { type Result, Results } from "@y0n1/react-mvvm";
 import type { ITodosService } from "./ITodosService.ts";
-import type { ITodoApiModel } from "../../api/models/ITodoApiModel.ts";
+import type { ITodoApiModel } from "../../models/apis/ITodoApiModel.ts";
 
 const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
 const twoDaysAgo = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000);

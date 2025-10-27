@@ -1,5 +1,5 @@
 import { css } from "@emotion/css";
-import type { Todo } from "../../../domain/models/Todo.ts";
+import type { Todo } from "../../../models/domain/Todo.ts";
 import { TodoListItem } from "./TodoListItem.tsx";
 
 const styles = css`

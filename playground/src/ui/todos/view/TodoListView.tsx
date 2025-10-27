@@ -3,8 +3,8 @@ import { TodoListHeader } from "./TodoListHeader.tsx";
 import { TodoListForm } from "./TodoListForm.tsx";
 import { TodoListEmptyState } from "./TodoListEmptyState.tsx";
 import { TodoListItems } from "./TodoListItems.tsx";
-import type { Todo } from "../../../domain/models/Todo.ts";
-import type { TodoCounters } from "../../../domain/models/TodoCounters.ts";
+import type { Todo } from "../../../models/domain/Todo.ts";
+import type { TodoCounters } from "../../../models/domain/TodoCounters.ts";
 
 const styles = css`
   width: 100%;
