@@ -1,6 +1,6 @@
 /**
  * NativeObservable stores a mutable value of type T and allows observers to receive updates whenever the value changes.
- * 
+ *
  * @description
  * This implementation uses the native EventTarget API under the hood to manage events and listeners.
  *
