@@ -161,22 +161,18 @@ larger applications.
 
 ## Development
 
-```bash
-# Run tests (if implemented)
-npm run test
+Everything is already wired up, if you use VSCode. Just Clone this repository,
+and hit `F5`.
 
-# Build for production
-npm run build
+```bash
+# Run tests
+deno task test
 
 # Format code
 deno task format
-# or
-npm run format
 
 # Lint code
 deno task lint
-# or
-npm run lint
 ```
 
 ## License
