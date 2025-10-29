@@ -258,7 +258,8 @@ Deno.test("useCommand re-execution goes from done to running to done", async () 
 
 Deno.test("useCommand handles action that returns failure", async () => {
   const error = new Error("Test error");
-  const action: ActionLike<number> = () => Promise.resolve(Results.Failure(error));
+  const action: ActionLike<number> = () =>
+    Promise.resolve(Results.Failure(error));
 
   const { result, unmount } = renderHook(() => useCommand(action), STRICT_MODE);
 
@@ -912,7 +913,8 @@ Deno.test("useCommand handles action with complex return type", async () => {
 });
 
 Deno.test("useCommand handles action with no arguments", async () => {
-  const action: ActionLike<string, []> = () => Promise.resolve(Results.Success("no args"));
+  const action: ActionLike<string, []> = () =>
+    Promise.resolve(Results.Success("no args"));
 
   const { result, unmount } = renderHook(() => useCommand(action), STRICT_MODE);
 
@@ -1098,7 +1100,8 @@ Deno.test("useCommand works with array return types", async () => {
 });
 
 Deno.test("useCommand works with null and undefined return values", async () => {
-  const actionNull: ActionLike<null> = () => Promise.resolve(Results.Success(null));
+  const actionNull: ActionLike<null> = () =>
+    Promise.resolve(Results.Success(null));
   const actionUndefined: ActionLike<undefined> = () =>
     Promise.resolve(Results.Success(undefined));
 
