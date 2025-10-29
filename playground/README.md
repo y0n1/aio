@@ -161,8 +161,8 @@ larger applications.
 
 ## Development
 
-Everything is already wired up, if you use VSCode. Just Clone this repository, and hit `F5`.
-
+Everything is already wired up, if you use VSCode. Just Clone this repository,
+and hit `F5`.
 
 ```bash
 # Run tests
@@ -173,7 +173,6 @@ deno task format
 
 # Lint code
 deno task lint
-
 ```
 
 ## License
