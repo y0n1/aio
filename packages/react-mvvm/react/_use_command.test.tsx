@@ -128,7 +128,7 @@ Deno.test("useCommand handles void action result", async () => {
 
 Deno.test("useCommand transitions from idle to running to done", async () => {
   let resolveAction: ((value: number) => void) | null = null;
-  const action: ActionLike<number> = async () => {
+  const action: ActionLike<number> = () => {
     return new Promise<Result<number, Error>>((resolve) => {
       resolveAction = (value: number) => resolve(Results.Success(value));
     });
@@ -139,10 +139,7 @@ Deno.test("useCommand transitions from idle to running to done", async () => {
   assertEquals(result.current.status, "idle");
 
   // Start execution without awaiting completion
-  let executeStarted = false;
-  const executePromise = result.current.execute().then(() => {
-    executeStarted = true;
-  });
+  const executePromise = result.current.execute();
 
   // Wait for next tick to let React flush state updates
   await act(async () => {
@@ -167,7 +164,7 @@ Deno.test("useCommand clears result when starting execution", async () => {
   let executionCount = 0;
   let resolveAction: (() => void) | undefined;
 
-  const action: ActionLike<number> = async () => {
+  const action: ActionLike<number> = () => {
     executionCount++;
     return new Promise<Result<number, Error>>((resolve) => {
       resolveAction = () => resolve(Results.Success(executionCount));
@@ -195,7 +192,6 @@ Deno.test("useCommand clears result when starting execution", async () => {
   }
 
   // Second execution - result should be cleared during running phase
-  let capturedRunningResult: typeof result.current.result | undefined;
   const executePromise = result.current.execute();
 
   // Wait for state update to flush
@@ -204,7 +200,7 @@ Deno.test("useCommand clears result when starting execution", async () => {
   });
 
   // Capture result while running
-  capturedRunningResult = result.current.result;
+  const capturedRunningResult = result.current.result;
 
   const secondResolve = resolveAction;
   await act(async () => {
@@ -420,7 +416,7 @@ Deno.test("useCommand prevents concurrent execution", async () => {
   let executionCount = 0;
   let resolveAction: (() => void) | null = null;
 
-  const action: ActionLike<number> = async () => {
+  const action: ActionLike<number> = () => {
     executionCount++;
     return new Promise<Result<number, Error>>((resolve) => {
       resolveAction = () => resolve(Results.Success(executionCount));
@@ -496,7 +492,7 @@ Deno.test("useCommand allows re-execution after completion", async () => {
 
 Deno.test("useCommand triggers rerender when execution starts", async () => {
   let resolveAction: (() => void) | null = null;
-  const action: ActionLike<number> = async () => {
+  const action: ActionLike<number> = () => {
     return new Promise<Result<number, Error>>((resolve) => {
       resolveAction = () => resolve(Results.Success(42));
     });
@@ -529,7 +525,7 @@ Deno.test("useCommand triggers rerender when execution starts", async () => {
 });
 
 Deno.test("useCommand triggers rerender when execution completes", async () => {
-  const action: ActionLike<number> = async () => Results.Success(42);
+  const action: ActionLike<number> = () => Results.Success(42);
 
   let renderCount = 0;
   const { result, unmount } = renderHook(() => {
@@ -550,7 +546,7 @@ Deno.test("useCommand triggers rerender when execution completes", async () => {
 });
 
 Deno.test("useCommand triggers rerender when cleared", async () => {
-  const action: ActionLike<number> = async () => Results.Success(42);
+  const action: ActionLike<number> = () => Results.Success(42);
 
   let renderCount = 0;
   const { result, unmount } = renderHook(() => {
@@ -576,7 +572,7 @@ Deno.test("useCommand triggers rerender when cleared", async () => {
 
 Deno.test("useCommand doesn't trigger rerenders after unmount", async () => {
   let resolveAction: ((value: number) => void) | undefined;
-  const action: ActionLike<number> = async () => {
+  const action: ActionLike<number> = () => {
     return new Promise<Result<number, Error>>((resolve) => {
       resolveAction = (value: number) => resolve(Results.Success(value));
     });
@@ -717,8 +713,6 @@ Deno.test("useCommand execute identity changes when action changes", () => {
     STRICT_MODE,
   );
 
-  const firstExecute = result.current.execute;
-
   currentAction = action2;
   rerender();
 
@@ -752,7 +746,7 @@ Deno.test("useCommand works correctly in React StrictMode", async () => {
 
 Deno.test("useCommand executes action only once in StrictMode", async () => {
   let executionCount = 0;
-  const action: ActionLike<number> = async () => {
+  const action: ActionLike<number> = () => {
     executionCount++;
     return Results.Success(executionCount);
   };
@@ -932,7 +926,7 @@ Deno.test("useCommand handles action with no arguments", async () => {
 
 Deno.test("useCommand handles rapid execute calls", async () => {
   let executionCount = 0;
-  const action: ActionLike<number> = async () => {
+  const action: ActionLike<number> = () => {
     executionCount++;
     return Results.Success(executionCount);
   };
